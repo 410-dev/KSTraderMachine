@@ -11,3 +11,9 @@ include("_drivers:UpBit")
 findProject(":_drivers:UpBit")?.name = "UpBit"
 include("strategies:GeneralV1")
 findProject(":strategies:GeneralV1")?.name = "GeneralV1"
+include("_drivers:UpBit")
+findProject(":_drivers:UpBit")?.name = "UpBit"
+include("_dStrategies:GeneralV1OverWS")
+findProject(":_dStrategies:GeneralV1OverWS")?.name = "GeneralV1OverWS"
+include("_drivers:Binance")
+findProject(":_drivers:Binance")?.name = "Binance"

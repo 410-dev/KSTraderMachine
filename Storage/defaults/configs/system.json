@@ -1,0 +1,20 @@
+{
+    "version": 1,
+    "ui": {
+        "DaemonBlinkingTimeMS": 10
+    },
+    "backend": {
+        "BlacklistedLibraries": [],
+        "BlacklistedDrivers": [],
+        "BlacklistedStrategies": [],
+        "Telemetry": {
+            "Enabled": true
+        }
+    },
+    "activation": {
+        "Enabled": true,
+        "Registration": "abcd@example.com",
+        "GeneratorSeed": "1293481987",
+        "SharedSecret": "goaijpr9igqp394uhtpqw9euhrtpkj"
+    }
+}

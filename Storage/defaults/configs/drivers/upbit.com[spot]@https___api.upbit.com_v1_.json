@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "linkage": {
+        "exchange": "upbit.comp[spot]",
+        "endpoint": "https://api.upbit.com/v1/"
+    },
+    "settings": {
+        "auth.apiAK": "",
+        "auth.apiSK": "",
+        "future.leverage": 1,
+        "option.leverage": 1
+    }
+}

@@ -32,7 +32,7 @@ dependencies {
 
 
     // External dependencies
-    implementation("com.google.code.gson:gson:2.12.1")
+    implementation("com.google.code.gson:gson:2.13.0")
 
     // Lombok, used only during compile time
     compileOnly("org.projectlombok:lombok:1.18.36")
@@ -62,7 +62,7 @@ tasks.withType<Jar> {
         attributes(
             "Implementation-Title" to project.name,
             "Implementation-Version" to project.version,
-            "Main-Class" to "me.hysong.atlas.system.Main"
+            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.Application"
         )
     }
 }
@@ -74,7 +74,7 @@ tasks.withType<ShadowJar> {
         attributes(
             "Implementation-Title" to project.name,
             "Implementation-Version" to project.version,
-            "Main-Class" to "me.hysong.atlas.Main" // Crucial for executable JAR
+            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.Application" // Crucial for executable JAR
         )
     }
     // 2. Set target directory for the fat JAR:
@@ -86,17 +86,7 @@ tasks.withType<ShadowJar> {
     // 4. Includes the main project's compiled classes:
     from(sourceSets.main.get().output)
 
-    // 5. Includes compiled classes from all subprojects:
-    //    This loop correctly finds your :dependencies:Crypto, :dependencies:JsonCodable, etc.,
-    //    and adds their compiled code (.class files) to the fat JAR.
-//    subprojects.forEach { subproj ->
-//        subproj.pluginManager.withPlugin("java") {
-//            val sourceSets = subproj.extensions.findByType(SourceSetContainer::class.java)
-//            if (sourceSets != null) {
-//                from(sourceSets.getByName("main").output)
-//            }
-//        }
-//    }
+
     // 5. Includes compiled classes only from subprojects starting with "_sdk":
     subprojects.forEach { subproj ->
         // Check if the subproject name starts with "_sdk"
@@ -112,8 +102,23 @@ tasks.withType<ShadowJar> {
         }
     }
 
-    // 6. Merges service files (Good practice):
-    //    If any dependencies use Java's ServiceLoader mechanism (META-INF/services),
-    //    this merges them correctly instead of overwriting.
     mergeServiceFiles()
+}
+
+
+val copyDriver by tasks.registering(Copy::class) {
+    group = "distribution"
+    description = "Copies the built appbuild.jar to the shared Storage directory"
+    from(layout.projectDirectory.file("appbuild.jar"))
+    into(layout.projectDirectory.dir("Storage"))
+    // if you want to overwrite
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+tasks.named("shadowJar") {
+    finalizedBy(copyDriver)
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("shadowJar"))
 }

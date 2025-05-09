@@ -1,0 +1,8 @@
+StoreValue activationObj = {NewObject me.hysong.kynesystems.apps.kstradermachine.objects.ActivationData}
+ObjectInvoke {{activationObj}} setNextCheckTime {Int64 32535215999000}
+ObjectInvoke {{activationObj}} setExpirationTime {Int64 32535215999000}
+ObjectInvoke {{activationObj}} setRegistrationId "demo@lks410.me"
+ObjectInvoke {{activationObj}} setGeneratorSeed {Int64 0}
+ObjectInvoke {{activationObj}} setSharedSecret "SC-20250501-0A39CF94-a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
+ObjectInvoke {{activationObj}} setActivationServerHost "localhost:36900/lks410svcs/activation/kstradermachine/v1"
+StaticInvoke {GetClassForName me.hysong.kynesystems.apps.kstradermachine.backend.Config} setActivationData {{activationObj}}

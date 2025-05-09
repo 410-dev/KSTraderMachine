@@ -41,3 +41,14 @@ bin/
 ### build ###
 *.class
 appbuild.jar
+Storage/configs
+Storage/dbs
+Storage/drivers
+Storage/libraries
+Storage/logs
+Storage/strategies
+
+### Resources ###
+~*
+.venv/*
+

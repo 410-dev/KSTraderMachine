@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class KSGraphicalApplication extends JPanel{
-    public abstract GPSplashWindow getSplashWindow();
+    public GPSplashWindow getSplashWindow() {return null;}
 
     public abstract int getWidth();
     public abstract int getHeight();
