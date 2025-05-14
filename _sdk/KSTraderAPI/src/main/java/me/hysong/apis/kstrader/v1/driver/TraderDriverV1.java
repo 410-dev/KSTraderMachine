@@ -2,13 +2,12 @@ package me.hysong.apis.kstrader.v1.driver;
 
 import me.hysong.apis.kstrader.v1.objects.Account;
 import me.hysong.apis.kstrader.v1.objects.Chart;
-import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 import me.hysong.apis.kstrader.v1.objects.Order;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public interface TraderDriver {
+public interface TraderDriverV1 {
 
     /**
      * Get chart data

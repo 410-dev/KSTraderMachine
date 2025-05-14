@@ -1,15 +1,15 @@
 package me.hysong.kstrader.drivers.v1.upbit;
 
 import lombok.Getter;
-import me.hysong.apis.kstrader.v1.driver.TraderDriverSettings;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 
 import java.util.HashMap;
 
 @Getter
-public class UpBitPreference extends TraderDriverSettings {
+public class UpBitPreference extends TraderDriverSettingsV1 {
 
-    private final String exchange = new UpBitDriverManifest().getDriverExchange();
-    private final String endpoint = new UpBitDriverManifest().getDriverAPIEndpoint();
+    private final String exchange = new UpBitDriverManifestV1().getDriverExchange();
+    private final String endpoint = new UpBitDriverManifestV1().getDriverAPIEndpoint();
 
     private final HashMap<String, Object> values = new HashMap<>();
 

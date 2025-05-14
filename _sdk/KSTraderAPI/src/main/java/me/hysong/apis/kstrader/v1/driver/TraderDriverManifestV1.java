@@ -2,7 +2,7 @@ package me.hysong.apis.kstrader.v1.driver;
 
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 
-public interface TraderDriverManifest {
+public interface TraderDriverManifestV1 {
 
     String getDriverName();          // Driver name, ex. "UpBit Generic Driver"
     String getDriverExchangeName();  // Exchange name, ex. "UpBit"
@@ -18,7 +18,6 @@ public interface TraderDriverManifest {
     String getDriverUpdateDate();
     String[] getSupportedSymbols(); // Supported symbols, ex. ["KRW-BTC", "BTC-USDT"]
     DriverExitCode testConnection();
-    TraderDriver getDriver();
-    TraderDriverSettings getPreferenceObject(String driverCfgPath);
-
+    TraderDriverV1 getDriver();
+    TraderDriverSettingsV1 getPreferenceObject(String driverCfgPath);
 }

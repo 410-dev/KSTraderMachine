@@ -20,7 +20,8 @@ public class Config implements JsonCodable {
         // TODO: Implement saving logic
     }
 
-    public static void load(String path) {
+    public static boolean load(String path) {
         // TODO: Implement loading logic
+        return false;
     }
 }

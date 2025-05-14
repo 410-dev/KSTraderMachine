@@ -17,3 +17,5 @@ include("_dStrategies:GeneralV1OverWS")
 findProject(":_dStrategies:GeneralV1OverWS")?.name = "GeneralV1OverWS"
 include("_drivers:Binance")
 findProject(":_drivers:Binance")?.name = "Binance"
+include("OtherApps:KSManualTrader")
+findProject(":OtherApps:KSManualTrader")?.name = "KSManualTrader"

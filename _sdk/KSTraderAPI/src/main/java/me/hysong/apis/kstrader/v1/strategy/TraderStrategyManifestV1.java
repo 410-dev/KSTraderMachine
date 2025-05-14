@@ -1,6 +1,6 @@
 package me.hysong.apis.kstrader.v1.strategy;
 
-public interface TraderStrategyManifest {
+public interface TraderStrategyManifestV1 {
 
     String getStrategyName();
     String getStrategyVersion();

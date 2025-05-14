@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
-import me.hysong.apis.kstrader.v1.driver.TraderDriver;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
 import me.hysong.apis.kstrader.v1.objects.*;
 import me.hysong.apis.kstrader.v1.utils.CurlEmulator;
 import me.hysong.atlas.utils.SIDKit;
@@ -33,10 +33,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class UpBitDriver implements TraderDriver {
+public class UpBitDriverV1 implements TraderDriverV1 {
 
-    private final String endpointUrl = new UpBitDriverManifest().getDriverAPIEndpoint();
-    private final String exchangeName = new UpBitDriverManifest().getDriverExchangeName();
+    private final String endpointUrl = new UpBitDriverManifestV1().getDriverAPIEndpoint();
+    private final String exchangeName = new UpBitDriverManifestV1().getDriverExchangeName();
 
     private static ArrayList<String> getMissingParams(HashMap<String, Object> params, String[] requiredParams) {
         ArrayList<String> missingParams = new ArrayList<>();

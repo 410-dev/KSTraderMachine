@@ -58,6 +58,39 @@ public class MFS1 {
         return new File(realPath).mkdir();
     }
 
+    public static boolean isDirectory(String virtualPath) {
+        if (virtualPath == null || virtualPath.isEmpty()) {
+            return false;
+        }
+        String realPath = realPath(virtualPath);
+        if (realPath == null || realPath.isEmpty()) {
+            return false;
+        }
+        return new File(realPath).isDirectory();
+    }
+
+    public static boolean isFile(String virtualPath) {
+        if (virtualPath == null || virtualPath.isEmpty()) {
+            return false;
+        }
+        String realPath = realPath(virtualPath);
+        if (realPath == null || realPath.isEmpty()) {
+            return false;
+        }
+        return new File(realPath).isFile();
+    }
+
+    public static boolean exists(String virtualPath) {
+        if (virtualPath == null || virtualPath.isEmpty()) {
+            return false;
+        }
+        String realPath = realPath(virtualPath);
+        if (realPath == null || realPath.isEmpty()) {
+            return false;
+        }
+        return new File(realPath).exists();
+    }
+
     public static boolean write(String virtualPath, String content) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(realPath(virtualPath)));

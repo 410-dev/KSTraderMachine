@@ -1,13 +1,13 @@
 package me.hysong.kstrader.drivers.v1.upbit;
 
 import lombok.Getter;
-import me.hysong.apis.kstrader.v1.driver.TraderDriver;
-import me.hysong.apis.kstrader.v1.driver.TraderDriverManifest;
-import me.hysong.apis.kstrader.v1.driver.TraderDriverSettings;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 
 @Getter
-public class UpBitDriverManifest implements TraderDriverManifest {
+public class UpBitDriverManifestV1 implements TraderDriverManifestV1 {
     private final String driverName = "UpBit";
     private final String driverExchangeName = "UpBit";
     private final String driverExchange = "upbit.com[spot]";
@@ -33,12 +33,12 @@ public class UpBitDriverManifest implements TraderDriverManifest {
     }
 
     @Override
-    public TraderDriver getDriver() {
-        return new UpBitDriver();
+    public TraderDriverV1 getDriver() {
+        return new UpBitDriverV1();
     }
 
     @Override
-    public TraderDriverSettings getPreferenceObject(String driverCfgPath) {
+    public TraderDriverSettingsV1 getPreferenceObject(String driverCfgPath) {
         return new UpBitPreference(driverCfgPath);
     }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.*;
 import java.util.HashMap;
 
-public abstract class TraderDriverSettings {
+public abstract class TraderDriverSettingsV1 {
 
     @Setter private String driverCfgPath;
 
@@ -20,7 +20,7 @@ public abstract class TraderDriverSettings {
     public abstract String getExchange();
     public abstract String getEndpoint();
 
-    public TraderDriverSettings(String driverCfgPath) {
+    public TraderDriverSettingsV1(String driverCfgPath) {
         // Read the JSON file
         this.driverCfgPath = driverCfgPath;
         StringBuilder jsonContent = new StringBuilder();
