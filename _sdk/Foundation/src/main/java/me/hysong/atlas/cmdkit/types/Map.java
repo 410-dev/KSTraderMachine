@@ -3,6 +3,8 @@ package me.hysong.atlas.cmdkit.types;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
+import java.util.HashMap;
+
 public class Map implements KSScriptingExecutable {
     @Override
     public String returnType() {
@@ -12,9 +14,10 @@ public class Map implements KSScriptingExecutable {
     @Override
     public Object execute(Object[] args, KSExecutionSession session) throws Exception {
         // Usage: Map <Map>
+        //        Map
         //        Map <delimiter> <keys> <values>
 
-        if (args == null || args.length < 1 || args.length > 3) {
+        if (args == null || args.length > 3) {
             throw new RuntimeException("Map requires 1 or 3 arguments, but got: " + (args == null ? 0 : args.length));
         }
 
@@ -24,6 +27,8 @@ public class Map implements KSScriptingExecutable {
             } else {
                 throw new RuntimeException("Map requires a Map as the first argument");
             }
+        } else if (args.length == 0) {
+            return new HashMap<>();
         } else if (args.length == 3) {
             String delimiter = (String) args[0];
             String[] keys = ((String) args[1]).split(delimiter);

@@ -3,6 +3,7 @@ package me.hysong.atlas.cmdkit.types;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Iterable implements KSScriptingExecutable {
@@ -13,10 +14,11 @@ public class Iterable implements KSScriptingExecutable {
 
     @Override
     public Object execute(Object[] args, KSExecutionSession session) throws Exception {
+        // Usage: Iterable
         // Usage: Iterable <list>
         // Usage: Iterable <delimiter regex> <string>
-        if (args == null || args.length > 2 || args.length < 1) {
-            throw new RuntimeException("Iterable requires at least 1 and 2 arguments at most, but got: " + (args == null ? 0 : args.length));
+        if (args == null || args.length > 2) {
+            throw new RuntimeException("Iterable requires 2 arguments at most, but got: " + (args == null ? 0 : args.length));
         }
 
         if (args.length == 1) {
@@ -25,6 +27,8 @@ public class Iterable implements KSScriptingExecutable {
             } else {
                 throw new RuntimeException("Iterable requires a list as the first argument when casting.");
             }
+        } else if (args.length == 0) {
+            return new ArrayList<>();
         } else {
             if (args[0] instanceof String delimiter && args[1] instanceof String str) {
                 return List.of(str.split(delimiter));
