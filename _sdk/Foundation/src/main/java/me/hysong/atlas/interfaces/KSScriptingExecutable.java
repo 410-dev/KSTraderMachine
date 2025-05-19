@@ -14,4 +14,6 @@ public interface KSScriptingExecutable {
     default int[] getPreprocessingInterpreterWhitelist() {
         return new int[0];
     }
+
+    default String getManual() {return "";}
 }
