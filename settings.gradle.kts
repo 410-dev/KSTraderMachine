@@ -19,3 +19,5 @@ include("_drivers:Binance")
 findProject(":_drivers:Binance")?.name = "Binance"
 include("OtherApps:KSManualTrader")
 findProject(":OtherApps:KSManualTrader")?.name = "KSManualTrader"
+include("OtherApps:KSNotificationServer")
+findProject(":OtherApps:KSNotificationServer")?.name = "KSNotificationServer"

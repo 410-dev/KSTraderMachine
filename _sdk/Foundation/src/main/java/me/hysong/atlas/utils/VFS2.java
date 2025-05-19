@@ -388,7 +388,7 @@ public class VFS2 {
                 return false;
             }
 
-            if (vfsHash != null && realFileHash != null && vfsHash.equals(realFileHash)) {
+            if (vfsHash != null && vfsHash.equals(realFileHash)) {
                 System.out.println("ToDisk Hash Check: OK. Hashes match for '" + realFile.getAbsolutePath() + "'.");
             } else {
                 System.err.println("ToDisk Hash Check Error: HASH MISMATCH for '" + realFile.getAbsolutePath() + "'. Data integrity compromised.");
