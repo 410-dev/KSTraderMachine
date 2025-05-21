@@ -10,8 +10,11 @@ import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.MFS1;
+import me.hysong.kynesystem.services.notification.NotificationObject;
+import me.hysong.kynesystems.apps.kstradermachine.backend.Config;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.backend.objects.TraderDaemon;
+import me.hysong.kynesystems.apps.kstradermachine.backend.startup.LicenseSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.backend.startup.StorageSetupTool;
 
 import javax.swing.*;
@@ -38,17 +41,8 @@ public class Application extends KSGraphicalApplication implements KSApplication
     private JButton tradeProfitLogButton;
 
     // --- Daemon panel
-    private JPanel daemonPanel;
-    private JPanel daemon1panel;
-    private JPanel daemon2panel;
-    private JPanel daemon3panel;
-    private JPanel daemon4panel;
-    private JPanel daemon5panel;
-    private JPanel daemon6panel;
-    private JPanel daemon7panel;
-    private JPanel daemon8panel;
-    private JPanel daemon9panel;
-    private JPanel daemon10panel;
+    private JPanel daemonGridPanel;
+    private HashMap<Integer, JPanel> daemonStatusPanels;
 
     // --- Trading log panel
     private JPanel tradingLogPanel;
@@ -62,13 +56,19 @@ public class Application extends KSGraphicalApplication implements KSApplication
 
     // --- Memory
     private HashMap<Integer, TraderDaemon> daemonMap = new HashMap<>();
-    private HashMap<Integer, JPanel> daemonPanelMap = new HashMap<>();
 
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {
         currentInstance = this;
-//        GPBannerNotification notification = new GPBannerNotification("Kyne Systems Trader Machine", "Welcome to Kyne Systems Trader Machine!", GPBannerNotification.CORNER_TOP_RIGHT);
-//        notification.showNotification();
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            NotificationObject notification = new NotificationObject((o) -> {}, (o) -> {}, "KSTraderMachine " + i, "Welcome to KSTrader Machine!");
+            notification.dispatch();
+        }
         return 0;
     }
 
@@ -80,14 +80,14 @@ public class Application extends KSGraphicalApplication implements KSApplication
             String storagePath = StorageSetupTool.init(splashWindow);
             StorageSetupTool.copyDefault(splashWindow, storagePath);
 
-            // Check activation
+            // TODO Check activation
 //            boolean activated = LicenseSetupTool.isLicensed(splashWindow, storagePath);
 //            if (!activated) {
 //                JOptionPane.showMessageDialog(splashWindow, "License not activated. Please reopen the application to reactivate.", "Error", JOptionPane.ERROR_MESSAGE);
 //                System.exit(0);
 //            }
 
-            // Load configurations
+            // TODO Load configurations
 //            boolean success = Config.load(MFS1.realPath(storagePath + "/configs/system.json"));
 //            if (!success) {
 //                JOptionPane.showMessageDialog(splashWindow, "Failed to load configuration file", "Error", JOptionPane.ERROR_MESSAGE);
@@ -178,8 +178,14 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 throw new RuntimeException(e);
             }
 
-            // Synchronize accounts for each drivers
+            // TODO Synchronize accounts for each drivers
+//            try {
+//                splashWindow.setCurrentStatus("Synchronizing accounts...");
+//                Drivers.DriverLoader
+//            }
 
+            // Prepare UI
+            f
         }));
         JLabel titleLabel = new JLabel("Kyne Systems Trader Machine");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));

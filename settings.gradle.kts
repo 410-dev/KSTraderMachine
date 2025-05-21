@@ -25,3 +25,11 @@ include("_services:DiscordUIServer")
 findProject(":_services:DiscordUIServer")?.name = "DiscordUIServer"
 include("_sdk:KSSocket")
 findProject(":_sdk:KSSocket")?.name = "KSSocket"
+include("_services:Diagnostics")
+findProject(":_services:Diagnostics")?.name = "Diagnostics"
+include("_services:UpgradeManager")
+findProject(":_services:UpgradeManager")?.name = "UpgradeManager"
+include("_servers:ActivationServer")
+findProject(":_servers:ActivationServer")?.name = "ActivationServer"
+include("_services:ServicesControlService")
+findProject(":_services:ServicesControlService")?.name = "ServicesControlService"

@@ -1,0 +1,12 @@
+{
+    "ID": "me.hysong.kstrader.limitnoti",
+    "Enabled": false,
+    "SDK": 1,
+    "IODevices.In.Text": false,
+    "IODevices.In.Reply": true,
+    "IODevices.Out.Text": true,
+    "HookPort": 65205,
+    "IODevices.In.Text.Keyword.Prefix": "",
+    "IODevices.In.Text.Keyword.Contains": "",
+    "IODevices.In.Text.Keyword.Suffix": ""
+}

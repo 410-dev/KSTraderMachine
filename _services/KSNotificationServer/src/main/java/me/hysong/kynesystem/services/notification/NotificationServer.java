@@ -1,5 +1,7 @@
 package me.hysong.kynesystem.services.notification;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hysong.atlas.async.ParameteredRunnable;
 import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.interfaces.KSService;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class NotificationServer implements KSService {
 
@@ -22,12 +25,22 @@ public class NotificationServer implements KSService {
     protected static final String KSNS_GENERIC_AUTH_SEED = "SD-250519-912832";
 
     protected static final int port = 36800;
-    private int code = 0;
+    private final HashMap<Integer, Boolean> notificationBannerLocationIndex = new HashMap<>(); // TODO - Unclosed notification will show below existing.
+    @Getter @Setter private int maximumNotificationsPerCol = 8;
+    @Getter @Setter private int maximumNotificationsCols = 7;
+    private int horizontalPadding = 5;
+    private int verticalPadding = 5;
 
     @Override
     public int serviceMain(KSEnvironment environment, String execLocation, String[] args) {
-        // Initialize the server
         System.out.println("NotificationServer is starting...");
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Initialize the server
         try {
             notificationServer = new KSSocket("127.0.0.1", port, (request, decodedPayload) -> {
                 if (!NotificationObject.class.isAssignableFrom(decodedPayload.getClass())) {
@@ -59,9 +72,62 @@ public class NotificationServer implements KSService {
                 JFrame frame = new JFrame();
                 frame.setContentPane(notificationContentPanel);
                 frame.setUndecorated(true);
-                frame.setSize(100, 100);
-                frame.setLocation(0, 0);
+                frame.setSize(400, 100);
+                frame.setAlwaysOnTop(true);
+
+                // Get empty slot location
+                int x = horizontalPadding;
+                int y = verticalPadding;
+                int slotIndex = 0;
+                boolean found = false;
+                for (int i = 0; i < maximumNotificationsCols; i++) {
+                    for (int ii = 0; ii < maximumNotificationsPerCol; ii++) {
+                        int currentIndex = i * maximumNotificationsPerCol + ii;
+                        System.out.println("I: " + i + ", II: " + ii);
+                        System.out.println("Current Index: " + currentIndex + " = " + notificationBannerLocationIndex.getOrDefault(currentIndex, false));
+                        if (!notificationBannerLocationIndex.getOrDefault(currentIndex, false)) {
+                            x = (horizontalPadding + frame.getWidth()) * i;
+                            y = (verticalPadding + frame.getHeight()) * ii;
+                            notificationBannerLocationIndex.put(currentIndex, true);
+                            slotIndex = currentIndex;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+                frame.setLocation(x, y);
+                System.out.println("Location set: " + x + "," + y);
+                final int effectiveSlotIndex = slotIndex;
+
+                JButton dismissButton = new JButton("Dismiss");
+                dismissButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        notificationBannerLocationIndex.put(effectiveSlotIndex, false);
+                        frame.dispose();
+                    }
+                });
+                JButton okButton = new JButton("OK");
+                okButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        isClicked[0] = true;
+                        notificationBannerLocationIndex.put(effectiveSlotIndex, false);
+                        frame.dispose();
+                        System.out.println("DETECTED CLICK (BUTTON)");
+                    }
+                });
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+                buttonPanel.add(dismissButton);
+                buttonPanel.add(okButton);
+                notificationContentPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+
+
                 frame.setVisible(true);
+                System.out.println("OK");
 
                 // Play sound
                 // TODO - String soundfilePath = notificationObject.getSoundFile();
@@ -76,6 +142,7 @@ public class NotificationServer implements KSService {
                     waitedSeconds += 0.1;
                 }
 
+                notificationBannerLocationIndex.put(effectiveSlotIndex, false);
                 frame.dispose();
 
                 if (isClicked[0]) {
@@ -104,18 +171,18 @@ public class NotificationServer implements KSService {
         NotificationServer ns = new NotificationServer();
         ns.serviceMain(null, null, null);
 
-        NotificationObject no = new NotificationObject();
-
-        no.setNotificationPanel(new JPanel());
-
-        no.setOnClick(args1 -> {
-            System.out.println("Oh notification is clicked");
-        });
-
-        no.setOnIgnored(args1 -> {
-            System.out.println("Oh notification is ignored!");
-        });
-
-        no.dispatch();
+//        NotificationObject no = new NotificationObject();
+//
+//        no.setNotificationPanel(new JPanel());
+//
+//        no.setOnClick(args1 -> {
+//            System.out.println("Oh notification is clicked");
+//        });
+//
+//        no.setOnIgnored(args1 -> {
+//            System.out.println("Oh notification is ignored!");
+//        });
+//
+//        no.dispatch();
     }
 }

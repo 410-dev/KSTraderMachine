@@ -6,6 +6,7 @@ import me.hysong.atlas.async.ParameteredRunnable;
 import me.hysong.atlas.kssocket.v1.objects.KSSocketPayload;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 
 @Getter
@@ -13,20 +14,34 @@ import java.io.Serializable;
 public class NotificationObject implements Serializable {
     private String notificationSrvHost = "127.0.0.1";
     private int notificationSrvPort = NotificationServer.port;
-    private ParameteredRunnable onClick = args -> {};
-    private ParameteredRunnable onIgnored = args -> {};
-    private ParameteredRunnable onError = args -> {
-        if (args.length > 0)
-            System.out.println("Failed to dispatch notification to NotificationServer: " + ((Exception) args[0]).getMessage());
-        else
+    private transient ParameteredRunnable onClick = args -> {};
+    private transient ParameteredRunnable onIgnored = args -> {};
+    private transient ParameteredRunnable onError = args -> {
+        if (args.length > 0) {
+            System.out.println("Failed to dispatch notification to NotificationServer: " + args[0]);
+            ((Exception) args[0]).printStackTrace();
+        } else {
             System.out.println("Failed to dispatch notification to NotificationServer for unknown reason.");
+            }
     };
     private JPanel notificationPanel;
     private String soundFile = "";
     private int dismissInSeconds = 5;
 
-    public NotificationObject() {
+    public NotificationObject(ParameteredRunnable onClick, ParameteredRunnable onIgnored, String title, String text) {
+        this.onClick = onClick;
+        this.onIgnored = onIgnored;
+        JPanel genericDisplayPanel = new JPanel();
+        genericDisplayPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        genericDisplayPanel.setLayout(new BorderLayout());
+        JLabel titleLabel = new JLabel(title);
+        JLabel textLabel = new JLabel(text);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        genericDisplayPanel.add(titleLabel, BorderLayout.NORTH);
+        genericDisplayPanel.add(textLabel, BorderLayout.CENTER);
 
+        this.notificationPanel = genericDisplayPanel;
     }
 
     public NotificationObject(ParameteredRunnable onClick, ParameteredRunnable onIgnored, JPanel notificationPanel) {

@@ -403,14 +403,14 @@ public class VFS2 {
         System.out.println("Successfully exported VFS file '" + vfsFileName + "' to '" + realFile.getAbsolutePath() + "'.");
         return true;
     }
-
-    public boolean imageFromDisk(File source, String head, int maxDepth) {
-        // TODO
-    }
-
-    public boolean imageToDisk(File target) {
-        // TODO
-    }
+//
+//    public boolean imageFromDisk(File source, String head, int maxDepth) {
+//        // TODO
+//    }
+//
+//    public boolean imageToDisk(File target) {
+//        // TODO
+//    }
 
     // --- Low-Level Disk Access ---
 
@@ -939,6 +939,28 @@ public class VFS2 {
         }
     }
 
+    public boolean exists(String fileName) {
+        ensureFormatted();
+        if (fileName == null || fileName.trim().isEmpty()) {
+            return false;
+        }
+
+        int headerEndAddress = readInt(OFF_HEADER_END_PTR);
+        int maxFiles = readInt(OFF_MAX_FILES);
+
+        // Scan table for the file
+        for (int i = 0; i < maxFiles; i++) {
+            long currentEntryOffset = (long)headerEndAddress + ((long)i * FILE_ENTRY_SIZE);
+            byte exists = readAt(currentEntryOffset + FENTRY_OFF_EXISTS);
+            if (exists == 1) {
+                return true;
+            }
+        }
+
+        // File not found
+        return false;
+    }
+
     /**
      * Defragments the data area of the disk.
      * It collects all active file segments, sorts them by their current position,
@@ -1142,6 +1164,19 @@ public class VFS2 {
          if (lastData > total) return 0; // Pointer somehow beyond disk end
          if (lastData < HEADER_SIZE) return total - HEADER_SIZE; // Pointer invalid, assume only header used
         return total - lastData;
+    }
+
+    public ArrayList<String> list() {
+        int headerEndAddress = readInt(OFF_HEADER_END_PTR);
+        int maxFiles = readInt(OFF_MAX_FILES);
+        ArrayList<String> fileNames = new ArrayList<>();
+        for (int i = 0; i < maxFiles; i++) {
+            long entryOffset = (long)headerEndAddress + ((long)i * VFS2.FILE_ENTRY_SIZE);
+            if (readAt(entryOffset + VFS2.FENTRY_OFF_EXISTS) == 1) {
+                fileNames.add(readString(entryOffset + VFS2.FENTRY_OFF_FILENAME, 64));
+            }
+        }
+        return fileNames;
     }
 
     /**
@@ -1501,7 +1536,7 @@ public class VFS2 {
                             System.out.println("--- File List ---");
                             int fileCount = 0;
                             long totalSize = 0;
-                             System.out.printf("%-3s %-20s %-10s %-10s %-25s%n", "Idx", "Name", "Size (B)", "Start Addr", "Modified"); // Header
+                            System.out.printf("%-3s %-20s %-10s %-10s %-25s%n", "Idx", "Name", "Size (B)", "Start Addr", "Modified"); // Header
                             for (int i = 0; i < maxFiles; i++) {
                                 long entryOffset = (long)headerEndAddress + ((long)i * VFS2.FILE_ENTRY_SIZE);
                                 if (vfs.readAt(entryOffset + VFS2.FENTRY_OFF_EXISTS) == 1) {

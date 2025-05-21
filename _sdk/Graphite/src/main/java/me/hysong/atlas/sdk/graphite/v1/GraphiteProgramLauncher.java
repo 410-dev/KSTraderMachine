@@ -186,6 +186,7 @@ public class GraphiteProgramLauncher {
                                     if (splashFrame != null) {
                                         splashFrame.dispose();
                                     }
+                                    System.exit(0);
                                 })
                                 .start();
                     } else {

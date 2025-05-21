@@ -1,13 +1,10 @@
 package me.hysong.kynesystems.apps.kstradermachine.backend.startup;
 
 import lombok.Getter;
-import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
-import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
-import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
+import me.hysong.atlas.sharedobj.ActivationData;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.atlas.utils.VFS1;
-import me.hysong.kynesystems.apps.kstradermachine.objects.ActivationData;
+import me.hysong.atlas.utils.VFS2;
 
 import javax.swing.*;
 
@@ -15,6 +12,7 @@ import javax.swing.*;
 public class LicenseSetupTool extends JFrame {
 
     private static String licensePath;
+    private static String licensePlainPath;
 
     private static ActivationData activationData;
 
@@ -22,6 +20,7 @@ public class LicenseSetupTool extends JFrame {
     public LicenseSetupTool() {
         // TODO: Implement the license setup tool UI and functionality.
         // TODO: Once activation is made, fill activationData with the license information.
+
     }
 
 
@@ -37,32 +36,38 @@ public class LicenseSetupTool extends JFrame {
             }
         }
 
-        VFS1 vfsDisk = new VFS1();
-        vfsDisk.format(64 * 1024);
-        activationData.save(vfsDisk);
-        vfsDisk.saveDisk(licensePath);
+        activationData.save(MFS1.realPath(licensePath));
     }
 
     public static boolean isLicensed(GPSplashWindow splashWindow, String storagePath) {
         splashWindow.setCurrentStatus("Checking license...");
         licensePath = storagePath + "/license.vfs";
-        if (!MFS1.isFile(licensePath)) {
+        licensePlainPath = storagePath + "/license.txt";
+        if (!MFS1.isFile(licensePlainPath)) {
             System.out.println("License file not found.");
             splashWindow.setCurrentStatus("Opening Licensing Tool...");
             openLicensingTool();
         }
-        splashWindow.setCurrentStatus("Checking license...");
-        VFS1 vfsDisk = new VFS1();
-        vfsDisk.loadDisk(MFS1.realPath(licensePath));
-        ActivationData activationData = new ActivationData();
-        activationData.load(vfsDisk);
-        if (!activationData.isActivated()) {
-            splashWindow.setCurrentStatus("License not activated.");
-            MFS1.delete(licensePath);
-            return false;
-        } else {
-            splashWindow.setCurrentStatus("License activated.");
-            return true;
+        if (!MFS1.isFile(licensePath)) {
+            System.out.println("License container not found. Unable to continue.");
+            JOptionPane.showMessageDialog(splashWindow, "License container not found. Unable to continue.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
+        splashWindow.setCurrentStatus("Checking container...");
+        VFS2 vfs2 = new VFS2();
+        vfs2.loadDisk(licensePath);
+        ActivationData activationData = new ActivationData(vfs2);
+        try {
+            if (!activationData.isActivatedForThisMachine(MFS1.readString(licensePlainPath))) {
+                splashWindow.setCurrentStatus("License not activated.");
+                return false;
+            } else {
+                splashWindow.setCurrentStatus("License activated.");
+                return true;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
