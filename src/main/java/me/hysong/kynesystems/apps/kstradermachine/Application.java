@@ -9,6 +9,7 @@ import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
+import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystem.services.notification.NotificationObject;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Config;
@@ -16,9 +17,17 @@ import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.backend.objects.TraderDaemon;
 import me.hysong.kynesystems.apps.kstradermachine.backend.startup.LicenseSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.backend.startup.StorageSetupTool;
+import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.AboutWindow;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.ProfitLogs;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
+import org.apache.commons.codec.language.bm.Lang;
+import org.intellij.lang.annotations.Flow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,6 +42,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
     private final int windowHeight = 600;
 
     // Components
+
     // --- Top button bars
     private JPanel topButtonBar;
     private JButton aboutButton;
@@ -41,8 +51,9 @@ public class Application extends KSGraphicalApplication implements KSApplication
     private JButton tradeProfitLogButton;
 
     // --- Daemon panel
+    private JPanel middleHStackPanel;
     private JPanel daemonGridPanel;
-    private HashMap<Integer, JPanel> daemonStatusPanels;
+    private HashMap<Integer, DaemonPanel> daemonStatusPanels;
 
     // --- Trading log panel
     private JPanel tradingLogPanel;
@@ -60,15 +71,15 @@ public class Application extends KSGraphicalApplication implements KSApplication
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {
         currentInstance = this;
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            NotificationObject notification = new NotificationObject((o) -> {}, (o) -> {}, "KSTraderMachine " + i, "Welcome to KSTrader Machine!");
-            notification.dispatch();
-        }
+//        for (int i = 0; i < 10; i++) {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            NotificationObject notification = new NotificationObject((o) -> {}, (o) -> {}, "KSTraderMachine " + i, "Welcome to KSTrader Machine!");
+//            notification.dispatch();
+//        }
         return 0;
     }
 
@@ -102,6 +113,32 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 JOptionPane.showMessageDialog(splashWindow, "Failed to load libraries", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
                 throw new RuntimeException(e);
+            }
+
+            // Load languages
+            String[] nonDefaultLanguages = MFS1.listFiles(storagePath + "/languages", false);
+            String[] defaultLanguages = MFS1.listFiles(storagePath + "/defaults/languages", false);
+            for (String file : defaultLanguages) {
+                // Filter .lang.txt files only
+                if (!file.endsWith(".lang.txt")) continue;
+
+                // Load
+                try {
+                    LanguageKit.loadLanguageFromFile(storagePath + "/defaults/languages/" + file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            for (String file : nonDefaultLanguages) {
+                // Filter .lang.txt files only
+                if (!file.endsWith(".lang.txt")) continue;
+
+                // Load
+                try {
+                    LanguageKit.loadLanguageFromFile(storagePath + "/languages/" + file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             // Load drivers
@@ -184,8 +221,142 @@ public class Application extends KSGraphicalApplication implements KSApplication
 //                Drivers.DriverLoader
 //            }
 
+
+            // ==================
             // Prepare UI
-            f
+            // ==================
+            splashWindow.setCurrentStatus(LanguageKit.getValue("STATUS_PREPARE_UI"));
+            setLayout(new GridBagLayout()); // Main panel uses GridBagLayout
+            GridBagConstraints gbcMain = new GridBagConstraints();
+
+            // -- top buttons
+            aboutButton = new JButton(LanguageKit.getValue("ABOUT_BUTTON_TEXT"));
+            basicSettingsButton = new JButton(LanguageKit.getValue("BASIC_SETTINGS_BUTTON_TEXT"));
+            logsButton = new JButton(LanguageKit.getValue("LOGS_BUTTON_TEXT"));
+            tradeProfitLogButton = new JButton(LanguageKit.getValue("TRADE_PROFIT_LOG_BUTTON_TEXT"));
+            topButtonBar = new JPanel();
+            topButtonBar.setLayout(new GridLayout(1, 0, 5, 0));
+            topButtonBar.add(aboutButton);
+            topButtonBar.add(basicSettingsButton);
+            topButtonBar.add(logsButton);
+            topButtonBar.add(tradeProfitLogButton);
+
+            gbcMain.gridx = 0;
+            gbcMain.gridy = 0;
+            gbcMain.weightx = 1.0; // Takes full width
+            gbcMain.weighty = 0.1; // 10% of window height
+            gbcMain.fill = GridBagConstraints.BOTH;
+            add(topButtonBar, gbcMain);
+
+            // -- Middle panel
+            middleHStackPanel = new JPanel();
+            middleHStackPanel.setLayout(new GridBagLayout()); // Middle panel also uses GridBagLayout
+            GridBagConstraints gbcMiddle = new GridBagConstraints();
+
+            // -- Daemon panel
+            int rows = 5;
+            int cols = 2;
+            daemonGridPanel = new JPanel();
+            daemonGridPanel.setLayout(new GridLayout(rows, cols, 5, 5)); // Added gaps for better visuals
+            daemonStatusPanels = new HashMap<>();
+            for (int i = 0; i < rows; i++) {
+                for (int ii = 0; ii < cols; ii++) {
+                    // Assuming DaemonPanel has a reasonable preferred size.
+                    // If not, you might need to set a preferred size on DaemonPanel, e.g.:
+                     DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
+                    // dp.setPreferredSize(new Dimension(150, 60)); // Example preferred size for each daemon cell
+//                    DaemonPanel dp = new DaemonPanel(LanguageKit.getValue("DAEMON") + " " + (i * cols + ii + 1), LanguageKit.getValue("STATUS") + ": OK", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
+//                    dp.setBorder(BorderFactory.createEtchedBorder()); // Add border to individual daemon panels for clarity
+                    daemonStatusPanels.put(i * cols + ii, dp);
+                    daemonGridPanel.add(dp);
+                }
+            }
+
+            // Define the fixed width for the daemonGridPanel.
+            // This should be calculated based on your DaemonPanel's content and 'cols'.
+            // For example, if each DaemonPanel aims for 150px width, and cols=2, with 5px hgap:
+            // (150 * 2) + (5 * (2-1)) = 300 + 5 = 305. Add insets if any.
+            final int FIXED_DAEMON_GRID_WIDTH = 305; // ADJUST THIS VALUE AS NEEDED
+
+            daemonGridPanel.setPreferredSize(new Dimension(FIXED_DAEMON_GRID_WIDTH, 10)); // Initial height can be small, layout will manage
+            daemonGridPanel.setMinimumSize(new Dimension(FIXED_DAEMON_GRID_WIDTH, 10));
+            daemonGridPanel.setMaximumSize(new Dimension(FIXED_DAEMON_GRID_WIDTH, Short.MAX_VALUE)); // Fixed width, flexible height
+
+            gbcMiddle.gridx = 0;
+            gbcMiddle.gridy = 0;
+            gbcMiddle.weightx = 0.0; // Daemon panel does not take extra horizontal space
+            gbcMiddle.weighty = 1.0; // Takes proportional vertical space
+            gbcMiddle.fill = GridBagConstraints.VERTICAL; // Fills vertically, respects preferred width
+            gbcMiddle.anchor = GridBagConstraints.NORTHWEST; // Anchor to top-left
+            middleHStackPanel.add(daemonGridPanel, gbcMiddle);
+
+            // -- Trading log panel
+            // tradingLogPanel = new JPanel(); // Not directly needed if JScrollPane is added directly
+            tradingLogTextArea = new JTextArea(10, 30); // Give some initial preferred size
+            tradingLogTextArea.setEditable(false);
+            tradingLogTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            tradingLogScrollPane = new JScrollPane(tradingLogTextArea);
+            tradingLogScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            tradingLogScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); // Usually better than ALWAYS
+
+            gbcMiddle.gridx = 1;
+            gbcMiddle.gridy = 0;
+            gbcMiddle.weightx = 1.0; // Trading log takes all remaining horizontal space
+            gbcMiddle.weighty = 1.0; // Takes proportional vertical space
+            gbcMiddle.fill = GridBagConstraints.BOTH;
+            middleHStackPanel.add(tradingLogScrollPane, gbcMiddle);
+
+            // Add middleHStackPanel to the main frame
+            gbcMain.gridx = 0;
+            gbcMain.gridy = 1;
+            gbcMain.weightx = 1.0;
+            gbcMain.weighty = 0.9; // 70% of window height
+            gbcMain.fill = GridBagConstraints.BOTH;
+            add(middleHStackPanel, gbcMain);
+
+            // -- All action buttons
+            allActionButtonsPanel = new JPanel();
+            allStartButton = new JButton(LanguageKit.getValue("ALLSTART_BUTTON_TEXT"));
+            allStopButton = new JButton(LanguageKit.getValue("ALLSTOP_BUTTON_TEXT"));
+//            allActionButtonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Buttons centered within the panel
+            allActionButtonsPanel.setLayout(new GridLayout(1, 0, 5, 0)); // NEW: 1 row, any columns, 5px hgap, 0px vgap
+            allActionButtonsPanel.add(allStartButton);
+            allActionButtonsPanel.add(allStopButton);
+
+            gbcMain.gridx = 0;
+            gbcMain.gridy = 2;
+            gbcMain.weightx = 1.0;
+            gbcMain.weighty = 0.1; // 10% of window height
+            gbcMain.fill = GridBagConstraints.BOTH; // Panel fills its allocated space
+            add(allActionButtonsPanel, gbcMain);
+
+            // -- Debug borders (can be removed once layout is confirmed)
+//            topButtonBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            middleHStackPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+//            daemonGridPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Added for daemonGridPanel
+//            tradingLogScrollPane.setBorder(BorderFactory.createLineBorder(Color.ORANGE)); // Added for scroll pane
+//            allActionButtonsPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+
+            // Add button actions
+            aboutButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GraphiteProgramLauncher.launch(AboutWindow.class, new String[]{});
+                }
+            });
+            logsButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GraphiteProgramLauncher.launch(SystemLogs.class, new String[]{});
+                }
+            });
+            tradeProfitLogButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GraphiteProgramLauncher.launch(ProfitLogs.class, new String[]{});
+                }
+            });
+
         }));
         JLabel titleLabel = new JLabel("Kyne Systems Trader Machine");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
