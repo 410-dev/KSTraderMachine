@@ -6,8 +6,8 @@ import java.awt.*;
 public abstract class KSGraphicalApplication extends JPanel{
     public GPSplashWindow getSplashWindow() {return null;}
 
-    public abstract int getWidth();
-    public abstract int getHeight();
+    public abstract int getWindowWidth();
+    public abstract int getWindowHeight();
 
     public int getCloseBehavior() {return JFrame.EXIT_ON_CLOSE;}
     public boolean isResizable() {return true;}

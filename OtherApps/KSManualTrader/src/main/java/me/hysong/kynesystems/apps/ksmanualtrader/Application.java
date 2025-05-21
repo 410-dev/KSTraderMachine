@@ -18,8 +18,8 @@ import java.awt.*;
 public class Application extends KSGraphicalApplication implements KSApplication {
 
     private final String appDisplayName = "Kyne Systems Manual Trader";
-    private final int width = 800;
-    private final int height = 600;
+    private final int windowWidth = 800;
+    private final int windowHeight = 600;
 
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {

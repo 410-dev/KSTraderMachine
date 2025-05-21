@@ -29,8 +29,8 @@ public class Application extends KSGraphicalApplication implements KSApplication
     public static Application currentInstance;
 
     private final String appDisplayName = "Kyne Systems Trader Machine";
-    private final int width = 800;
-    private final int height = 600;
+    private final int windowWidth = 800;
+    private final int windowHeight = 600;
 
     // Components
     // --- Top button bars

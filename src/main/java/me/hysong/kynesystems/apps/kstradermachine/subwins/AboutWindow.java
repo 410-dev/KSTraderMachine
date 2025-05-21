@@ -12,8 +12,8 @@ import javax.swing.*;
 public class AboutWindow extends KSGraphicalApplication implements KSApplication {
     private final String appDisplayName = "About KSTraderMachine";
     private final int closeBehavior = JFrame.DISPOSE_ON_CLOSE;
-    private final int width = 400;
-    private final int height = 300;
+    private final int windowWidth = 400;
+    private final int windowHeight = 300;
 
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {

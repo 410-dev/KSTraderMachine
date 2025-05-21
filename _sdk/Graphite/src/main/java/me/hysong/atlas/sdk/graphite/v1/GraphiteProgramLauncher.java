@@ -16,8 +16,7 @@ public class GraphiteProgramLauncher {
         if (KSGraphicalApplication.class.isAssignableFrom(appInstance.getClass())) {
             JFrame window = GraphiteWindowServer.makeWindow(appInstance.getAppDisplayName());
             KSGraphicalApplication app = (KSGraphicalApplication) appInstance;
-            window.setContentPane((JPanel) appInstance);
-            window.setSize(app.getWidth(), app.getHeight());
+            window.setSize(app.getWindowWidth(), app.getWindowHeight());
             window.setResizable(app.isResizable());
             window.setAlwaysOnTop(app.isAlwaysOnTop());
             window.setDefaultCloseOperation(app.getCloseBehavior());
@@ -27,6 +26,9 @@ public class GraphiteProgramLauncher {
             window.setTitle(appInstance.getAppDisplayName());
             window.setIconImage(app.getAppIcon());
             window.setVisible(true);
+//            app.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+//            window.setContentPane((JPanel) appInstance);
+            window.add((JPanel)appInstance);
 
             Thread refreshThread = new Thread(() -> {
                 System.out.println("Starting refresh thread for " + appInstance.getAppDisplayName());
