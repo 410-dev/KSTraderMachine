@@ -17,7 +17,7 @@ import java.util.jar.JarFile;
 
 public class Drivers {
 
-    private static DriverLoader classLoader;
+    private static DriverLoader classLoader = new DriverLoader(new URL[]{}, Application.class.getClassLoader());
 
     public final static HashMap<String, Class<?>> drivers = new HashMap<>();
     public final static HashMap<String, Class<?>> strategies = new HashMap<>();
