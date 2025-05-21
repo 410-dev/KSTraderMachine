@@ -40,6 +40,7 @@ public class SimplePromise {
                     next.start();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 if (onFailure != null) {
                     onFailure.run();
                 }
