@@ -18,16 +18,41 @@ public class AboutWindow extends KSGraphicalApplication implements KSApplication
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JLabel title = new JLabel("Current build: 2025-05-09-A");
-        title.setHorizontalAlignment(SwingConstants.LEFT);
-        title.setVerticalAlignment(SwingConstants.CENTER);
-        title.setFont(title.getFont().deriveFont(20f));
-        title.setAlignmentX(CENTER_ALIGNMENT);
-        title.setAlignmentY(CENTER_ALIGNMENT);
-        title.setSize(width, title.getFont().getSize());
-        title.setLocation(0, 0);
-        title.setVisible(true);
-        add(title);
+
+        String[] linesToWrite = new String[]{
+                "KSTraderMachine",
+                "",
+                "",
+                "Version: 1.0",
+                "Build: 25JN08A (2025. June 08 A)",
+                "Release: Release",
+                "Foundation: 1.0",
+                "Graphite: 1.0",
+                "Scripting mode: Disabled",
+                "Telemetry mode: Disabled",
+                "Resource on VFS: No"
+        };
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        for (String line : linesToWrite) {
+            sb.append(line);
+            sb.append("<br>");
+        }
+        sb.append("</html>");
+
+        JLabel text = new JLabel(sb.toString());
+        text.setAlignmentX(CENTER_ALIGNMENT);
+        text.setHorizontalAlignment(SwingConstants.LEFT);
+        text.setVerticalAlignment(SwingConstants.CENTER);
+        text.setFont(text.getFont().deriveFont(15f));
+        text.setAlignmentX(CENTER_ALIGNMENT);
+        text.setAlignmentY(CENTER_ALIGNMENT);
+        text.setSize(windowWidth, text.getFont().getSize());
+        text.setLocation(0, 0);
+        text.setVisible(true);
+        add(text);
+
         return 0;
     }
 
