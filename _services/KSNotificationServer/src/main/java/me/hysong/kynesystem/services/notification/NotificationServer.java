@@ -73,6 +73,7 @@ public class NotificationServer implements KSService {
                 frame.setContentPane(notificationContentPanel);
                 frame.setUndecorated(true);
                 frame.setSize(400, 100);
+                frame.setFocusable(false);
                 frame.setAlwaysOnTop(true);
 
                 // Get empty slot location
