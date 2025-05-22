@@ -1,9 +1,11 @@
 package me.hysong.kstrader.drivers.v1.upbit;
 
+import com.google.gson.JsonObject;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
+import me.hysong.apis.kstrader.v1.objects.Account;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 
 @Getter
@@ -40,5 +42,10 @@ public class UpBitDriverManifestV1 implements TraderDriverManifestV1 {
     @Override
     public TraderDriverSettingsV1 getPreferenceObject(String driverCfgPath) {
         return new UpBitPreference(driverCfgPath);
+    }
+
+    @Override
+    public Account getAccount(String type, JsonObject preferenceFile) {
+        return new Account(type, driverExchange, preferenceFile.get("auth.apiAK").getAsString(), preferenceFile.get("auth.apiSK").getAsString());
     }
 }

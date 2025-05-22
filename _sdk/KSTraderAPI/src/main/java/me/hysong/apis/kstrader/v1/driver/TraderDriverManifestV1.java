@@ -1,6 +1,11 @@
 package me.hysong.apis.kstrader.v1.driver;
 
+import com.google.gson.JsonObject;
+import me.hysong.apis.kstrader.v1.objects.Account;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public interface TraderDriverManifestV1 {
 
@@ -20,4 +25,5 @@ public interface TraderDriverManifestV1 {
     DriverExitCode testConnection();
     TraderDriverV1 getDriver();
     TraderDriverSettingsV1 getPreferenceObject(String driverCfgPath);
+    Account getAccount(String type, JsonObject preferenceFile);
 }
