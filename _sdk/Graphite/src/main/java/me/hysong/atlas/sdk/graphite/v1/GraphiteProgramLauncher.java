@@ -1,8 +1,11 @@
 package me.hysong.atlas.sdk.graphite.v1;
 
 import me.hysong.atlas.async.SimplePromise;
+import me.hysong.atlas.enums.OSKernelDistro;
 import me.hysong.atlas.interfaces.KSApplication;
+import me.hysong.atlas.interfaces.KSDeepSystemCommunicator;
 import me.hysong.atlas.sharedobj.KSEnvironment;
+import me.hysong.atlas.utils.KSHostTool;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -80,7 +83,11 @@ public class GraphiteProgramLauncher {
         try {
             // Set the look and feel to the system default
             if (sleekUIEnabled) {
-                setUIFont(new FontUIResource("Arial", Font.PLAIN, 13));
+                if (KSHostTool.getOSKernelDistro().equals(OSKernelDistro.WINDOWS)) {
+                    setUIFont(new FontUIResource("Malgun Gothic", Font.PLAIN, 13));
+                } else {
+                    setUIFont(new FontUIResource("Arial", Font.PLAIN, 13));
+                }
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } else {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
