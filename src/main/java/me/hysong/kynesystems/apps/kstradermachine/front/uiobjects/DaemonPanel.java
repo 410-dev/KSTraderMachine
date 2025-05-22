@@ -15,7 +15,7 @@ public class DaemonPanel extends JPanel {
     private JLabel desc_strategyName;
     private ParameteredRunnable paintingAlgorithm;
     private Color preferredColor;
-    private int flashLatency = 80;
+    private int flashLatency = 10;
     private Thread refreshThread;
     private Daemon holdingDaemon;
     private boolean terminateRefreshThread = false;
@@ -33,13 +33,15 @@ public class DaemonPanel extends JPanel {
     // arg 2: Preferred color
     public static final ParameteredRunnable REPAINT_FLASHING = args -> {
         Color next;
-        if (args[1].equals(args[2])) next = COLOR_IDLE;
-        else next = (Color) args[1];
-        ((JPanel) args[0]).setBackground(next);
+        if (args[1].toString().equals(args[2].toString())) next = COLOR_IDLE;
+        else next = (Color) args[2];
+        ((DaemonPanel) args[0]).setBackground(next);
+        ((DaemonPanel) args[0]).repaint();
+        ((DaemonPanel) args[0]).revalidate();
     };
 
     public static final ParameteredRunnable REPAINT_STATIC = args -> {
-        ((JPanel) args[0]).setBackground((Color) args[2]);
+        ((DaemonPanel) args[0]).setBackground((Color) args[2]);
     };
 
     public enum DaemonStatusOutlook {
@@ -54,6 +56,7 @@ public class DaemonPanel extends JPanel {
                 setForeground(COLOR_TEXT);
                 paintingAlgorithm.run(this, getBackground(), preferredColor);
                 repaint();
+                revalidate();
                 if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
                     this.title_symbolAndExchange.setText(daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName());
                     this.desc_strategyName.setText(daemon.getStrategyManifest().getStrategyName());
