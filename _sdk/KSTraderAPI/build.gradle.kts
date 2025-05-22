@@ -20,6 +20,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
     implementation(project(":_sdk:Foundation"))
+    implementation(project(":_sdk:liblks"))
 
     implementation("com.google.code.gson:gson:2.13.0")
 
