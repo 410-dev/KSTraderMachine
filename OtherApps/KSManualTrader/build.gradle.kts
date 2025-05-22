@@ -98,7 +98,7 @@ tasks.withType<ShadowJar> {
     mergeServiceFiles()
 }
 
-
-tasks.named("build") {
-    dependsOn(tasks.named("shadowJar"))
-}
+//
+//tasks.named("build") {
+//    dependsOn(tasks.named("shadowJar"))
+//}
