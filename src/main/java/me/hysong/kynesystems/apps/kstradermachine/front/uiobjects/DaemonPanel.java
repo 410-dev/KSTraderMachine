@@ -57,9 +57,7 @@ public class DaemonPanel extends JPanel {
                 if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
                     this.title_symbolAndExchange.setText(daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName());
                     this.desc_strategyName.setText(daemon.getStrategyManifest().getStrategyName());
-                    System.out.println("UPDATED TEXT");
                 }
-                System.out.println("Daemon status: " + daemon.getCfg().getSymbol());
                 try {
                     Thread.sleep(flashLatency);
                 } catch (InterruptedException e) {
@@ -67,7 +65,6 @@ public class DaemonPanel extends JPanel {
                 }
             }
         });
-        refreshThread.start();
 
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY)); // Or any other color
 
@@ -76,9 +73,17 @@ public class DaemonPanel extends JPanel {
         this.desc_strategyName = new JLabel(desc_strategyName);
         // Potentially set alignment, font, etc. on labels
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Or another layout like BorderLayout
+        this.title_symbolAndExchange.setHorizontalAlignment(SwingConstants.CENTER);
+        this.title_symbolAndExchange.setFont(this.title_symbolAndExchange.getFont().deriveFont(Font.BOLD));
+
+        this.desc_strategyName.setHorizontalAlignment(SwingConstants.CENTER);
+
+        setLayout(new GridLayout(2, 1)); // Or another layout like BorderLayout
         add(this.title_symbolAndExchange);
         add(this.desc_strategyName);
+
+
+        refreshThread.start();
     }
 
     public void setStatus(DaemonStatusOutlook outlook) {
