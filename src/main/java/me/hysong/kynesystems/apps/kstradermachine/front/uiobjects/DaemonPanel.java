@@ -3,6 +3,7 @@ package me.hysong.kynesystems.apps.kstradermachine.front.uiobjects;
 import lombok.Getter;
 import lombok.Setter;
 import me.hysong.atlas.async.ParameteredRunnable;
+import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,7 @@ public class DaemonPanel extends JPanel {
     private Color preferredColor;
     private int flashLatency = 80;
     private Thread refreshThread;
+    private Daemon holdingDaemon;
     private boolean terminateRefreshThread = false;
 
     public static final Color COLOR_OPERATING = Color.GREEN;
@@ -44,13 +46,20 @@ public class DaemonPanel extends JPanel {
         OPERATING, STARTING_UP, ERROR, EMERGENCY, NOT_RUNNING
     }
 
-    public DaemonPanel(String title_symbolAndExchange, String desc_strategyName, DaemonStatusOutlook outlook) {
+    public DaemonPanel(String title_symbolAndExchange, String desc_strategyName, DaemonStatusOutlook outlook, Daemon daemon) {
+        this.holdingDaemon = daemon;
         setStatus(outlook);
         refreshThread = new Thread(() -> {
             while (!terminateRefreshThread) {
                 setForeground(COLOR_TEXT);
                 paintingAlgorithm.run(this, getBackground(), preferredColor);
                 repaint();
+                if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
+                    this.title_symbolAndExchange.setText(daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName());
+                    this.desc_strategyName.setText(daemon.getStrategyManifest().getStrategyName());
+                    System.out.println("UPDATED TEXT");
+                }
+                System.out.println("Daemon status: " + daemon.getCfg().getSymbol());
                 try {
                     Thread.sleep(flashLatency);
                 } catch (InterruptedException e) {

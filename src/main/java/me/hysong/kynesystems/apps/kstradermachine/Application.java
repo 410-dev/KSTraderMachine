@@ -279,14 +279,14 @@ public class Application extends KSGraphicalApplication implements KSApplication
             daemonStatusPanels = new HashMap<>();
             for (int i = 0; i < rows; i++) {
                 for (int ii = 0; ii < cols; ii++) {
-                    DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
-                    daemonStatusPanels.put(i * cols + ii, dp);
+                    int idx = i * cols + ii;
+                    DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING, daemonMap.get(idx));
+                    daemonStatusPanels.put(idx, dp);
                     daemonGridPanel.add(dp);
-                    int finalI = i * cols + ii;
                     dp.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            GraphiteProgramLauncher.launch(EditDaemon.class, new String[]{"slot=" + finalI});
+                            GraphiteProgramLauncher.launch(EditDaemon.class, new String[]{"slot=" + idx});
                         }
                     });
                 }
