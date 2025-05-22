@@ -157,7 +157,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
         UpBitCandleDataStructure firstCandle = candleData.getFirst();
 
         // Create chart object
-        Chart chart = new Chart(symbol, interval + intervalUnit.substring(0, 1), firstCandle.getOpeningTime(), lastCandle.getOpeningTime(), MarketTypes.SPOT, exchangeName, account.getAccountId());
+        Chart chart = new Chart(symbol, interval + intervalUnit.substring(0, 1), firstCandle.getOpeningTime(), lastCandle.getOpeningTime(), MarketTypes.SPOT, exchangeName, account.getUniqueID());
 
         // Add data to chart
         // Calculate close time based on unit and interval
@@ -245,7 +245,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
                 order.setBuySide("bid".equalsIgnoreCase(jsonObject.get("side").getAsString()));
                 order.setType(jsonObject.get("ord_type").getAsString());
                 order.setExchange(exchangeName);
-                order.setOwnerId(account.getAccountId());
+//                order.setOwnerId(account.getAccountId());
                 order.setTime(OffsetDateTime.parse(jsonObject.get("created_at").getAsString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME).toInstant().toEpochMilli());
                 order.setSymbol(jsonObject.get("market").getAsString());
                 order.setPrice(Double.parseDouble(jsonObject.get("price").getAsString()));
@@ -465,7 +465,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
 
             order.setOrderId(jsonObject.get("uuid").getAsString());
             order.setExchange(exchangeName);
-            order.setOwnerId(account.getAccountId());
+//            order.setOwnerId(account.getAccountId());
             order.setStatus(jsonObject.get("state").getAsString());
             order.setCanceled("cancel".equalsIgnoreCase(order.getStatus()));
             order.setOpen("wait".equalsIgnoreCase(order.getStatus()));
