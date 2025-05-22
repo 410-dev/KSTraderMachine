@@ -15,6 +15,8 @@ import me.hysong.kynesystems.apps.kstradermachine.objects.DaemonCfg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -302,6 +304,19 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         actionButtonPanel.add(stopButton);
         addComponent.accept(actionButtonPanel);
         // formRow++; // No need to increment if it's the last form item before adding configFormPanel
+
+        runButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                daemon.start();
+            }
+        });
+        stopButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                daemon.terminate();
+            }
+        });
 
         // Add the configFormPanel to the main panel
         gbcMain.gridx = 0;
