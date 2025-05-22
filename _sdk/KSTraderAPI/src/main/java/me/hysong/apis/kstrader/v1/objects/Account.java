@@ -12,12 +12,12 @@ public class Account {
     public static final String CREDENTIAL_KEY_PK = "pk";
     public static final String CREDENTIAL_KEY_SK = "sk";
 
-    private String accountId;
-    private String accountName;
-    private String accountType; // e.g. "spot", "futures"
-    private String exchange; // e.g. "binance", "upbit"
+    private final String accountId;
+    private final String accountName;
+    private final String accountType; // e.g. "spot", "futures"
+    private final String exchange; // e.g. "binance", "upbit"
 
-    private HashMap<String, Object> credentials; // e.g. {"pk": "your_pk", "sk": "your_sk"}
+    private final HashMap<String, Object> credentials; // e.g. {"pk": "your_pk", "sk": "your_sk"}
     private HashMap<String, Chart> charts; // e.g. {"Spot:BTCUSDT": ChartObject}
     private HashMap<String, ArrayList<Order>> orders; // e.g. {"Spot:BTCUSDT": [OrderObject1, OrderObject2]}
 

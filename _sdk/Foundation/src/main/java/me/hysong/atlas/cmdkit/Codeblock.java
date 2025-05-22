@@ -5,8 +5,6 @@ import me.hysong.atlas.cmdkit.objects.CodeBlockObject;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
-import javax.swing.*;
-
 @Getter
 public class Codeblock implements KSScriptingExecutable {
 
@@ -54,7 +52,7 @@ public class Codeblock implements KSScriptingExecutable {
                     } else if (arg instanceof Number) {
                         code.append(arg);
                     } else {
-                        code.append(arg.getClass().getName()).append(": ").append(arg.toString());
+                        code.append(arg.getClass().getName()).append(": ").append(arg);
                     }
                     if (i < args.length - 1) {
                         code.append(" ");

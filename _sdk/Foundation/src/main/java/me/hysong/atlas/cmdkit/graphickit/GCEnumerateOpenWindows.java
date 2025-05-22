@@ -4,9 +4,9 @@ import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
-import java.awt.*;
 import java.util.stream.Collectors;
 
 public class GCEnumerateOpenWindows implements KSScriptingExecutable {

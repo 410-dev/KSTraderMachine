@@ -3,18 +3,10 @@ package me.hysong.atlas.utils;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-// Add these or ensure they are present
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects; // For Objects.requireNonNull
-import java.io.File;
-import java.io.FileInputStream; // Though Files.readAllBytes is often preferred
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path; // Used by Files.readAllBytes(realFile.toPath())
+import java.util.*;
 // No explicit import for java.math.BigInteger is needed with the chosen hex conversion
 
 public class VFS2 {
@@ -301,7 +293,7 @@ public class VFS2 {
                 return false;
             }
 
-            if (sourceHash != null && vfsHash != null && sourceHash.equals(vfsHash)) {
+            if (sourceHash != null && sourceHash.equals(vfsHash)) {
                 System.out.println("FromDisk Hash Check: OK. Hashes match for '" + vfsFilename + "'.");
             } else {
                 System.err.println("FromDisk Hash Check Error: HASH MISMATCH for '" + vfsFilename + "'. Data integrity compromised.");
@@ -644,7 +636,7 @@ public class VFS2 {
 
         // Initialize Last Data Pointer to point right after the file table
         // Data starts here. Use 'long' for this pointer.
-        writeLong(OFF_LAST_DATA_PTR, (long)tableEndAddress);
+        writeLong(OFF_LAST_DATA_PTR, tableEndAddress);
 
 
         System.out.println("VFS Formatted. Header Size: " + headerEndAddress + " bytes. Max Files: " + maxFiles + ". Table End: " + tableEndAddress + ". Data Area Start: " + tableEndAddress);

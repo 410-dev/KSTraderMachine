@@ -21,11 +21,10 @@ public class GraphiteGetElementByID implements KSScriptingExecutable {
             throw new RuntimeException("GraphiteGetElement requires 2 arguments: {GPGenericWindowObject} <element id>");
         }
 
-        if (!(args[0] instanceof GPGenericWindow)) {
+        if (!(args[0] instanceof GPGenericWindow window)) {
             throw new RuntimeException("First argument must be a GPGenericWindow object.");
         }
 
-        GPGenericWindow window = (GPGenericWindow) args[0];
         String elementId = (String) args[1];
         Component component = window.getComponentById(elementId);
         if (component == null) {

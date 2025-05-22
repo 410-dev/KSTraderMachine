@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LanguageKit {
-    private static HashMap<String, HashMap<String, String>> languageLoaded = new HashMap<>();
-    private static ArrayList<String> languagePriority = new ArrayList<>();
+    private static final HashMap<String, HashMap<String, String>> languageLoaded = new HashMap<>();
+    private static final ArrayList<String> languagePriority = new ArrayList<>();
     private static String currentLanguage = "ko-kr";
 
     public static void setLocale(String languageCode) {

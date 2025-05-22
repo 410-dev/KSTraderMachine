@@ -3,7 +3,6 @@ package me.hysong.atlas.cmdkit.graphickit;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
-import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

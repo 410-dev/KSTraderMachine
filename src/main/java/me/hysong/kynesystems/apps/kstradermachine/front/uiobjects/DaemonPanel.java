@@ -6,7 +6,6 @@ import me.hysong.atlas.async.ParameteredRunnable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.UnaryOperator;
 
 @Getter
 @Setter
@@ -41,7 +40,7 @@ public class DaemonPanel extends JPanel {
         ((JPanel) args[0]).setBackground((Color) args[2]);
     };
 
-    public static enum DaemonStatusOutlook {
+    public enum DaemonStatusOutlook {
         OPERATING, STARTING_UP, ERROR, EMERGENCY, NOT_RUNNING
     }
 

@@ -1,6 +1,5 @@
 package me.hysong.kynesystems.apps.kstradermachine.backend;
 
-import lombok.Getter;
 import me.hysong.kynesystems.apps.kstradermachine.Application;
 
 import java.io.File;

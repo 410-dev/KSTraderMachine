@@ -2,8 +2,6 @@ package me.hysong.kynesystem.services.notification;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hysong.atlas.async.ParameteredRunnable;
-import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.interfaces.KSService;
 import me.hysong.atlas.kssocket.v1.KSSocket;
 import me.hysong.atlas.sharedobj.KSEnvironment;
@@ -12,10 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class NotificationServer implements KSService {
@@ -28,8 +22,8 @@ public class NotificationServer implements KSService {
     private final HashMap<Integer, Boolean> notificationBannerLocationIndex = new HashMap<>(); // TODO - Unclosed notification will show below existing.
     @Getter @Setter private int maximumNotificationsPerCol = 8;
     @Getter @Setter private int maximumNotificationsCols = 7;
-    private int horizontalPadding = 5;
-    private int verticalPadding = 5;
+    private final int horizontalPadding = 5;
+    private final int verticalPadding = 5;
 
     @Override
     public int serviceMain(KSEnvironment environment, String execLocation, String[] args) {

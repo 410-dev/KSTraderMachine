@@ -13,8 +13,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 @Getter
@@ -25,7 +25,7 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
     private final int windowHeight = 600;
 
     private final static ArrayList<ProfitEntry> profitEntries = new ArrayList<>(); // Oldest goes latest
-    private static String sumUnit = "USD";
+    private static final String sumUnit = "USD";
 
 
     // Declare UI components as instance variables if they need to be accessed by other methods (e.g., refresh button)
@@ -182,7 +182,7 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
         private final String symbol;
         private final String exchange;
         private double amountTradeRealCurrency;
-        private double fee;
+        private final double fee;
         private String amountTradeRealCurrencyUnit;
         private double amountProfitRealCurrency;
         private String amountProfitRealCurrencyUnit;
@@ -239,16 +239,14 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
         }
 
         public String toSerializeString() {
-            return new StringBuilder()
-                    .append(this.epochTime).append("//")
-                    .append(this.symbol).append("//")
-                    .append(this.exchange).append("//")
-                    .append(this.amountTradeRealCurrency).append("//")
-                    .append(this.fee).append("//")
-                    .append(this.amountTradeRealCurrencyUnit).append("//")
-                    .append(this.amountProfitRealCurrency).append("//")
-                    .append(this.amountProfitRealCurrencyUnit).append("//")
-                    .toString();
+            return this.epochTime + "//" +
+                    this.symbol + "//" +
+                    this.exchange + "//" +
+                    this.amountTradeRealCurrency + "//" +
+                    this.fee + "//" +
+                    this.amountTradeRealCurrencyUnit + "//" +
+                    this.amountProfitRealCurrency + "//" +
+                    this.amountProfitRealCurrencyUnit + "//";
         }
     }
 

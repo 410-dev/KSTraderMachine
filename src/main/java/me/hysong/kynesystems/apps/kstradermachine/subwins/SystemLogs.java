@@ -7,21 +7,21 @@ import me.hysong.atlas.sharedobj.KSEnvironment;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter; // Added for WindowListener
-import java.awt.event.WindowEvent;   // Added for WindowListener
-import java.io.BufferedWriter;      // Added for file writing
-import java.io.File;                // Added for file handling
-import java.io.FileWriter;          // Added for file writing
-import java.io.IOException;         // Added for IO exceptions
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Getter
 public class SystemLogs extends KSGraphicalApplication implements KSApplication {
     // Static log storage
-    private static ArrayList<String> logs = new ArrayList<>();
-    private static ArrayList<Integer> infos = new ArrayList<>();
-    private static ArrayList<Integer> warnings = new ArrayList<>();
-    private static ArrayList<Integer> errors = new ArrayList<>();
+    private static final ArrayList<String> logs = new ArrayList<>();
+    private static final ArrayList<Integer> infos = new ArrayList<>();
+    private static final ArrayList<Integer> warnings = new ArrayList<>();
+    private static final ArrayList<Integer> errors = new ArrayList<>();
 
     // Static reference to the active window for live updates from static log() method
     public static SystemLogs activeInstance = null;

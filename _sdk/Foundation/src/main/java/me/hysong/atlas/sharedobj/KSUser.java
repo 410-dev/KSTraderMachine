@@ -9,10 +9,10 @@ public class KSUser {
     public static final String DefaultUserName = "default-user";
     public static final String DefaultUserDisplayName = "Default User";
 
-    private String SID;
-    private String username;
-    private String userDisplayName;
-    private Registry registry;
+    private final String SID;
+    private final String username;
+    private final String userDisplayName;
+    private final Registry registry;
 
     public KSUser() {
         this.SID = SIDKit.generateSID(SIDKit.SIDType.USER_OBJECT);

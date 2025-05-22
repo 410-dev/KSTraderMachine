@@ -1,10 +1,6 @@
 package me.hysong.atlas.utils;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -387,7 +383,7 @@ public class VFS1 {
 
         // Initialize Last Data Pointer to point right after the file table
         // Data starts here. Use 'long' for this pointer.
-        writeLong(OFF_LAST_DATA_PTR, (long)tableEndAddress);
+        writeLong(OFF_LAST_DATA_PTR, tableEndAddress);
 
 
         System.out.println("VFS Formatted. Header Size: " + headerEndAddress + " bytes. Max Files: " + maxFiles + ". Table End: " + tableEndAddress + ". Data Area Start: " + tableEndAddress);

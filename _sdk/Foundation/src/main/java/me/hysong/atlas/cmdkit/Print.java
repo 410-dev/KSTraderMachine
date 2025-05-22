@@ -19,7 +19,7 @@ public class Print implements KSScriptingExecutable {
             } else if (arg instanceof Number) {
                 sb.append(arg);
             } else {
-                sb.append(arg.getClass().getName()).append(": ").append(arg.toString());
+                sb.append(arg.getClass().getName()).append(": ").append(arg);
             }
 
             if (i < args.length - 1) {

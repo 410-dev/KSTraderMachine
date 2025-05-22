@@ -79,30 +79,29 @@ public class Order {
     }
 
     public String toStructuredString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Order Details:\n");
-        sb.append("     Order ID: ").append(orderId).append("\n");
-        sb.append("     Owner ID: ").append(ownerId).append("\n");
-        sb.append("     Exchange: ").append(exchange).append("\n");
-        sb.append("    Time (ms): ").append(time).append("\n");
-        sb.append("         Time: ").append(new java.util.Date(time)).append("\n");
-        sb.append("       Symbol: ").append(symbol).append("\n");
-        sb.append("     Buy Side: ").append(buySide).append("\n");
-        sb.append("         Type: ").append(type).append("\n");
-        sb.append("  Market Type: ").append(marketType).append("\n");
-        sb.append("        Price: ").append(String.format("%.2f", price)).append("  (unit of base currency)").append("\n");
-        sb.append("       Amount: ").append(String.format("%.2f", amount)).append("  (unit of crypto currency)").append("\n");
-        sb.append("          Fee: ").append(fee).append("  (unit of base currency)").append("\n");
-        sb.append("      Is Open: ").append(isOpen).append("\n");
-        sb.append("  Is Canceled: ").append(isCanceled).append("\n");
-        sb.append("    Is Filled: ").append(isFilled).append("\n");
-        sb.append("   Is Expired: ").append(isExpired).append("\n");
-        sb.append("Is Liquidated: ").append(isLiquidated).append("\n");
-        sb.append("       Status: ").append(status).append("\n");
-        sb.append("  Error value: ").append(error).append("\n");
-        sb.append("   Error Code: ").append(errorCode).append("\n");
+        String sb = "Order Details:\n" +
+                "     Order ID: " + orderId + "\n" +
+                "     Owner ID: " + ownerId + "\n" +
+                "     Exchange: " + exchange + "\n" +
+                "    Time (ms): " + time + "\n" +
+                "         Time: " + new java.util.Date(time) + "\n" +
+                "       Symbol: " + symbol + "\n" +
+                "     Buy Side: " + buySide + "\n" +
+                "         Type: " + type + "\n" +
+                "  Market Type: " + marketType + "\n" +
+                "        Price: " + String.format("%.2f", price) + "  (unit of base currency)" + "\n" +
+                "       Amount: " + String.format("%.2f", amount) + "  (unit of crypto currency)" + "\n" +
+                "          Fee: " + fee + "  (unit of base currency)" + "\n" +
+                "      Is Open: " + isOpen + "\n" +
+                "  Is Canceled: " + isCanceled + "\n" +
+                "    Is Filled: " + isFilled + "\n" +
+                "   Is Expired: " + isExpired + "\n" +
+                "Is Liquidated: " + isLiquidated + "\n" +
+                "       Status: " + status + "\n" +
+                "  Error value: " + error + "\n" +
+                "   Error Code: " + errorCode + "\n";
 
-        return sb.toString();
+        return sb;
     }
 
 }

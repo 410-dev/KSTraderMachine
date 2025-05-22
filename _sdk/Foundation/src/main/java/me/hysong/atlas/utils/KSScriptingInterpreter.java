@@ -1,16 +1,11 @@
 package me.hysong.atlas.utils;
 
-import me.hysong.atlas.cmdkit.objects.KSScriptingNull;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class KSScriptingInterpreter {
 
@@ -41,7 +36,7 @@ public class KSScriptingInterpreter {
         StringBuilder lineBuilder = new StringBuilder();
         for (Object part : lineParts) {
             if (part != null) {
-                lineBuilder.append(part.toString()).append(" ");
+                lineBuilder.append(part).append(" ");
             }
         }
 

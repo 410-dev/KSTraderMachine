@@ -18,7 +18,7 @@ public class GetAsString implements KSScriptingExecutable {
         StringBuilder result = new StringBuilder();
         for (Object arg : args) {
             if (arg != null) {
-                result.append(arg.toString());
+                result.append(arg);
             }
         }
         return result.toString();

@@ -89,13 +89,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number add(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return ((Number) a).intValue() + ((Number) b).intValue();
+            return a.intValue() + ((Number) b).intValue();
         } else if (precisionRank == 1) {
-            return ((Number) a).longValue() + ((Number) b).longValue();
+            return a.longValue() + ((Number) b).longValue();
         } else if (precisionRank == 2) {
-            return ((Number) a).floatValue() + ((Number) b).floatValue();
+            return a.floatValue() + ((Number) b).floatValue();
         } else if (precisionRank == 3) {
-            return ((Number) a).doubleValue() + ((Number) b).doubleValue();
+            return a.doubleValue() + ((Number) b).doubleValue();
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).add((java.math.BigDecimal) b);
         } else {
@@ -105,13 +105,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number subtract(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return ((Number) a).intValue() - ((Number) b).intValue();
+            return a.intValue() - ((Number) b).intValue();
         } else if (precisionRank == 1) {
-            return ((Number) a).longValue() - ((Number) b).longValue();
+            return a.longValue() - ((Number) b).longValue();
         } else if (precisionRank == 2) {
-            return ((Number) a).floatValue() - ((Number) b).floatValue();
+            return a.floatValue() - ((Number) b).floatValue();
         } else if (precisionRank == 3) {
-            return ((Number) a).doubleValue() - ((Number) b).doubleValue();
+            return a.doubleValue() - ((Number) b).doubleValue();
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).subtract((java.math.BigDecimal) b);
         } else {
@@ -121,13 +121,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number multiply(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return ((Number) a).intValue() * ((Number) b).intValue();
+            return a.intValue() * ((Number) b).intValue();
         } else if (precisionRank == 1) {
-            return ((Number) a).longValue() * ((Number) b).longValue();
+            return a.longValue() * ((Number) b).longValue();
         } else if (precisionRank == 2) {
-            return ((Number) a).floatValue() * ((Number) b).floatValue();
+            return a.floatValue() * ((Number) b).floatValue();
         } else if (precisionRank == 3) {
-            return ((Number) a).doubleValue() * ((Number) b).doubleValue();
+            return a.doubleValue() * ((Number) b).doubleValue();
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).multiply((java.math.BigDecimal) b);
         } else {
@@ -137,13 +137,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number divide(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return ((Number) a).intValue() / ((Number) b).intValue();
+            return a.intValue() / ((Number) b).intValue();
         } else if (precisionRank == 1) {
-            return ((Number) a).longValue() / ((Number) b).longValue();
+            return a.longValue() / ((Number) b).longValue();
         } else if (precisionRank == 2) {
-            return ((Number) a).floatValue() / ((Number) b).floatValue();
+            return a.floatValue() / ((Number) b).floatValue();
         } else if (precisionRank == 3) {
-            return ((Number) a).doubleValue() / ((Number) b).doubleValue();
+            return a.doubleValue() / ((Number) b).doubleValue();
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).divide((java.math.BigDecimal) b);
         } else {
@@ -153,13 +153,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number mod(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return ((Number) a).intValue() % ((Number) b).intValue();
+            return a.intValue() % ((Number) b).intValue();
         } else if (precisionRank == 1) {
-            return ((Number) a).longValue() % ((Number) b).longValue();
+            return a.longValue() % ((Number) b).longValue();
         } else if (precisionRank == 2) {
-            return ((Number) a).floatValue() % ((Number) b).floatValue();
+            return a.floatValue() % ((Number) b).floatValue();
         } else if (precisionRank == 3) {
-            return ((Number) a).doubleValue() % ((Number) b).doubleValue();
+            return a.doubleValue() % ((Number) b).doubleValue();
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).remainder((java.math.BigDecimal) b);
         } else {
@@ -169,13 +169,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number pow(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return java.lang.Math.pow(((Number) a).intValue(), ((Number) b).intValue());
+            return java.lang.Math.pow(a.intValue(), ((Number) b).intValue());
         } else if (precisionRank == 1) {
-            return java.lang.Math.pow(((Number) a).longValue(), ((Number) b).longValue());
+            return java.lang.Math.pow(a.longValue(), ((Number) b).longValue());
         } else if (precisionRank == 2) {
-            return java.lang.Math.pow(((Number) a).floatValue(), ((Number) b).floatValue());
+            return java.lang.Math.pow(a.floatValue(), ((Number) b).floatValue());
         } else if (precisionRank == 3) {
-            return java.lang.Math.pow(((Number) a).doubleValue(), ((Number) b).doubleValue());
+            return java.lang.Math.pow(a.doubleValue(), ((Number) b).doubleValue());
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).pow(((java.math.BigDecimal) b).intValue());
         } else {
@@ -185,13 +185,13 @@ public class Math implements KSScriptingExecutable {
 
     public static Number sqrt(Number a, Object b, int precisionRank) {
         if (precisionRank == 0) {
-            return java.lang.Math.sqrt(((Number) a).intValue());
+            return java.lang.Math.sqrt(a.intValue());
         } else if (precisionRank == 1) {
-            return java.lang.Math.sqrt(((Number) a).longValue());
+            return java.lang.Math.sqrt(a.longValue());
         } else if (precisionRank == 2) {
-            return java.lang.Math.sqrt(((Number) a).floatValue());
+            return java.lang.Math.sqrt(a.floatValue());
         } else if (precisionRank == 3) {
-            return java.lang.Math.sqrt(((Number) a).doubleValue());
+            return java.lang.Math.sqrt(a.doubleValue());
         } else if (precisionRank == 4) {
             return ((java.math.BigDecimal) a).sqrt(new java.math.MathContext(precisionRank));
         } else {

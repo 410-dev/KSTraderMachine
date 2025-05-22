@@ -36,7 +36,7 @@ public class While implements KSScriptingExecutable {
             } else if (arg instanceof Number) {
                 command.append(arg);
             } else {
-                command.append(arg.getClass().getName()).append(": ").append(arg.toString());
+                command.append(arg.getClass().getName()).append(": ").append(arg);
             }
             if (i < args.length - 1) {
                 command.append(" ");

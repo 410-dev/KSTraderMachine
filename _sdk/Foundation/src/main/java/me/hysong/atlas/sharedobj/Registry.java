@@ -6,7 +6,6 @@ import me.lks410.libhy2.jsoncoder.Encodable;
 import me.lks410.libhy2.jsoncoder.JsonCodable;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 @Encodable
 @Decodable

@@ -1,9 +1,9 @@
 package me.hysong.kstrader.drivers.v1.upbit;
 
 import lombok.Getter;
-import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
+import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 
 @Getter
@@ -11,7 +11,7 @@ public class UpBitDriverManifestV1 implements TraderDriverManifestV1 {
     private final String driverName = "UpBit";
     private final String driverExchangeName = "UpBit";
     private final String driverExchange = "upbit.com[spot]";
-    private final String driverAPIEndpoint = "https://api.upbit.com/v1/";;
+    private final String driverAPIEndpoint = "https://api.upbit.com/v1/";
     private final String driverVersion = "1.0.0";
     private final boolean supportFuture = false;
     private final boolean supportOption = false;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ActivationData {
 
-    private VFS2 storage;
+    private final VFS2 storage;
     public static final String NOT_ACTIVATED = StringDeriver.deriveStringFrom("BELLO", new int[]{5, 8, 13, 8, 5}, "-");
 
     public ActivationData(VFS2 storage) {

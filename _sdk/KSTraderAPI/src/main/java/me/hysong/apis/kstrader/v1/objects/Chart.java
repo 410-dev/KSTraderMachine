@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 @Getter
 public class Chart {
-    private String symbol;
-    private String interval;
-    private long startTime;
-    private long endTime;
-    private MarketTypes type;
-    private String exchange;
-    private String accountId;
-    private ArrayList<Candlestick> candlesticks;
+    private final String symbol;
+    private final String interval;
+    private final long startTime;
+    private final long endTime;
+    private final MarketTypes type;
+    private final String exchange;
+    private final String accountId;
+    private final ArrayList<Candlestick> candlesticks;
 
     public Chart(String symbol, String interval, long startTime, long endTime, MarketTypes type, String exchange, String accountId) {
         this.symbol = symbol;

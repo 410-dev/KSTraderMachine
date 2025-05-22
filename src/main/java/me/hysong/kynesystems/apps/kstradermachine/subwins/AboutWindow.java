@@ -2,7 +2,6 @@ package me.hysong.kynesystems.apps.kstradermachine.subwins;
 
 import lombok.Getter;
 import me.hysong.atlas.interfaces.KSApplication;
-import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 

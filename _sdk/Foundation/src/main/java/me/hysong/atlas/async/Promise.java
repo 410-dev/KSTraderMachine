@@ -1,7 +1,12 @@
 package me.hysong.atlas.async;
 
-import java.util.concurrent.*;
-import java.util.function.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Promise<T> {
     private static final ExecutorService DEFAULT_EXECUTOR =

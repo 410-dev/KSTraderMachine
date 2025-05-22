@@ -1,5 +1,8 @@
 package me.hysong.kstrader.drivers.v1.upbit;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,11 +11,6 @@ import me.hysong.apis.kstrader.v1.driver.TraderDriverV1;
 import me.hysong.apis.kstrader.v1.objects.*;
 import me.hysong.apis.kstrader.v1.utils.CurlEmulator;
 import me.hysong.atlas.utils.SIDKit;
-
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -25,8 +23,11 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -208,7 +209,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
         String queryString = String.join("&", queryElements.toArray(new String[0]));
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.update(queryString.getBytes("UTF-8"));
+        md.update(queryString.getBytes(StandardCharsets.UTF_8));
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
@@ -355,7 +356,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
         String queryString = String.join("&", queryElements.toArray(new String[0]));
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.update(queryString.getBytes("UTF-8"));
+        md.update(queryString.getBytes(StandardCharsets.UTF_8));
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
@@ -432,7 +433,7 @@ public class UpBitDriverV1 implements TraderDriverV1 {
         String queryString = String.join("&", queryElements.toArray(new String[0]));
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.update(queryString.getBytes("UTF-8"));
+        md.update(queryString.getBytes(StandardCharsets.UTF_8));
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 

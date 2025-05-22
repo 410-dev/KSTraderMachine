@@ -3,8 +3,6 @@ package me.hysong.atlas.cmdkit;
 import me.hysong.atlas.interfaces.KSScriptingExecutable;
 import me.hysong.atlas.sharedobj.KSExecutionSession;
 
-import java.awt.*;
-
 public class GraphiteGetElementByMatch implements KSScriptingExecutable {
     @Override
     public String returnType() {
