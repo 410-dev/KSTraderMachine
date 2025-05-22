@@ -7,5 +7,8 @@ public interface TraderStrategyManifestV1 {
     boolean isForWS();
     boolean isForREST();
 
+    RESTStrategyV1 getRESTStrategy();
+    WSStrategyV1 getWSStrategy();
+
 
 }
