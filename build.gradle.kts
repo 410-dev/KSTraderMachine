@@ -92,7 +92,7 @@ tasks.withType<ShadowJar> {
     // 5. Includes compiled classes only from subprojects starting with "_sdk":
     subprojects.forEach { subproj ->
         // Check if the subproject name starts with "_sdk"
-        if (subproj.name.startsWith("_sdk")) {
+        if (subproj.name.startsWith("_")) {
             // Apply the rest of the logic only if the name matches
             subproj.pluginManager.withPlugin("java") {
                 val sourceSets = subproj.extensions.findByType(SourceSetContainer::class.java)
