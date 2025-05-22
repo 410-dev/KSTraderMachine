@@ -5,11 +5,23 @@ import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.util.Enumeration;
 
 public class GraphiteProgramLauncher {
 
     public static boolean sleekUIEnabled = false;
+
+    public static void setUIFont(FontUIResource f){
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get (key);
+            if (value instanceof FontUIResource)
+                UIManager.put (key, f);
+        }
+    }
 
     private static int launchApp(KSApplication appInstance, KSEnvironment environment, String execLocation, String[] args) {
 
@@ -33,14 +45,18 @@ public class GraphiteProgramLauncher {
             Thread refreshThread = new Thread(() -> {
                 System.out.println("Starting refresh thread for " + appInstance.getAppDisplayName());
                 while (window.isVisible()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (app.isDisposeQueue()) {
+                        window.dispose();
                     }
                     if (app.refreshByFPS()) {
                         try {
                             Thread.sleep(app.getFPSTick());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -64,6 +80,7 @@ public class GraphiteProgramLauncher {
         try {
             // Set the look and feel to the system default
             if (sleekUIEnabled) {
+                setUIFont(new FontUIResource("Arial", Font.PLAIN, 13));
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } else {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
