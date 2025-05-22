@@ -164,7 +164,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 HashMap<String, Class<?>> drivers = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderDriverManifestV1.class);
                 for (String key : drivers.keySet()) {
                     Class<?> driverClass = drivers.get(key);
-                    System.out.println("Driver: " + key + " -> " + driverClass.getName());
+                    SystemLogs.log("INFO", "Driver: " + key + " -> " + driverClass.getName());
                     Drivers.drivers.put(key, driverClass);
                 }
             } catch (IOException e) {
@@ -174,7 +174,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
             }
 
             // Test driver connection
-            System.out.println("Loaded drivers: " + Drivers.drivers.size());
+            SystemLogs.log("INFO", "Loaded drivers: " + Drivers.drivers.size());
             for (Class<?> driverClass : Drivers.drivers.values()) {
                 if (driverClass.isAssignableFrom(TraderDriverManifestV1.class)) {
                     try {
@@ -185,7 +185,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
                             JOptionPane.showMessageDialog(splashWindow, "Driver connection test failed: " + manifest.getDriverExchange() + " from " + manifest.getDriverName(), "Error", JOptionPane.ERROR_MESSAGE);
                             System.exit(0);
                         } else {
-                            System.out.println("Driver connection test passed: " + manifest.getDriverExchange());
+                            SystemLogs.log("INFO", "Driver connection test passed: " + manifest.getDriverExchange());
                         }
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(splashWindow, "Failed to test driver connection: " + driverClass.getName(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -193,7 +193,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
                         throw new RuntimeException(e);
                     }
                 } else {
-                    System.out.println("Driver class " + driverClass.getName() + " is not a valid TraderDriverManifest.");
+                    SystemLogs.log("INFO", "Driver class " + driverClass.getName() + " is not a valid TraderDriverManifest.");
                 }
             }
 
@@ -203,7 +203,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 HashMap<String, Class<?>> strategies = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderStrategyManifestV1.class);
                 for (String key : strategies.keySet()) {
                     Class<?> strategyClass = strategies.get(key);
-                    System.out.println("Strategy: " + key + " -> " + strategyClass.getName());
+                    SystemLogs.log("INFO", "Strategy: " + key + " -> " + strategyClass.getName());
                     Drivers.strategies.put(key, strategyClass);
                 }
             } catch (IOException e) {
@@ -280,6 +280,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
             for (int i = 0; i < rows; i++) {
                 for (int ii = 0; ii < cols; ii++) {
                     int idx = i * cols + ii;
+                    SystemLogs.log("INFO", "Displaying daemon " + idx);
                     DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING, daemonMap.get(idx));
                     daemonStatusPanels.put(idx, dp);
                     daemonGridPanel.add(dp);

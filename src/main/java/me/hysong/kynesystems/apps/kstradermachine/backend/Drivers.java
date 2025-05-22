@@ -1,6 +1,7 @@
 package me.hysong.kynesystems.apps.kstradermachine.backend;
 
 import me.hysong.kynesystems.apps.kstradermachine.Application;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class Drivers {
             classLoader.addJar(jarUrl);
         }
 
-        System.out.println("Loaded JAR: " + jarFile.getName());
+        SystemLogs.log("INFO", "Loaded JAR: " + jarFile.getName());
     }
 
     public static Class<?> getClass(String className) throws ClassNotFoundException {

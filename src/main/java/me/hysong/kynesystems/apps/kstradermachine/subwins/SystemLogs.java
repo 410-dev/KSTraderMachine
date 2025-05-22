@@ -127,7 +127,7 @@ public class SystemLogs extends KSGraphicalApplication implements KSApplication 
                     public void windowClosed(WindowEvent e) {
                         if (SystemLogs.activeInstance == SystemLogs.this) {
                             SystemLogs.activeInstance = null;
-                            // System.out.println("SystemLogs window closed, activeInstance nulled."); // For debugging
+                            // SystemLogs.log("INFO", "SystemLogs window closed, activeInstance nulled."); // For debugging
                         }
                     }
                 });
@@ -199,13 +199,16 @@ public class SystemLogs extends KSGraphicalApplication implements KSApplication 
 
     // Static method to add logs (with basic live update)
     public static void log(String type, String logMessage) {
+        String currentTimeStamp = java.time.LocalDateTime.now().toString();
+        logMessage = "[" + type + "] [" + currentTimeStamp + "] " + logMessage;
         logs.add(logMessage);
+        System.out.println(logMessage);
         int idx = logs.size() - 1;
         String upperType = type.toUpperCase();
         switch (upperType) {
-            case "INFO" -> infos.add(idx);
             case "WARNING" -> warnings.add(idx);
             case "ERROR" -> errors.add(idx);
+            default -> infos.add(idx); // Include INFO
         }
 
         if (SystemLogs.activeInstance != null && SystemLogs.activeInstance.logTextArea != null) {
@@ -213,9 +216,10 @@ public class SystemLogs extends KSGraphicalApplication implements KSApplication 
             boolean shouldAppend = "ALL".equalsIgnoreCase(currentFilterInInstance) || upperType.equalsIgnoreCase(currentFilterInInstance);
 
             if (shouldAppend) {
+                String finalLogMessage = logMessage;
                 SwingUtilities.invokeLater(() -> {
                     if (SystemLogs.activeInstance != null && SystemLogs.activeInstance.logTextArea != null) {
-                        SystemLogs.activeInstance.logTextArea.append(logMessage + "\n");
+                        SystemLogs.activeInstance.logTextArea.append(finalLogMessage + "\n");
                     }
                 });
             }

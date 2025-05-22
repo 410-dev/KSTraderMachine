@@ -5,6 +5,7 @@ import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sharedobj.ActivationData;
 import me.hysong.atlas.utils.MFS1;
 import me.hysong.atlas.utils.VFS2;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 
 import javax.swing.*;
 
@@ -44,12 +45,12 @@ public class LicenseSetupTool extends JFrame {
         licensePath = storagePath + "/license.vfs";
         licensePlainPath = storagePath + "/license.txt";
         if (!MFS1.isFile(licensePlainPath)) {
-            System.out.println("License file not found.");
+            SystemLogs.log("INFO", "License file not found.");
             splashWindow.setCurrentStatus("Opening Licensing Tool...");
             openLicensingTool();
         }
         if (!MFS1.isFile(licensePath)) {
-            System.out.println("License container not found. Unable to continue.");
+            SystemLogs.log("INFO", "License container not found. Unable to continue.");
             JOptionPane.showMessageDialog(splashWindow, "License container not found. Unable to continue.", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }

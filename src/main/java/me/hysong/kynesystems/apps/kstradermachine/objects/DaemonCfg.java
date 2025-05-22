@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.kstradermachine.Application;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 import me.lks410.libhy2.jsoncoder.Codable;
 import me.lks410.libhy2.jsoncoder.JsonCodable;
 
@@ -25,13 +26,16 @@ public class DaemonCfg implements JsonCodable {
     private boolean autoRun;
 
     public boolean save() {
-        System.out.println("Saving configurations...:" + this.toIndentedJsonString());
+        SystemLogs.log("INFO", "Saving configurations...:" + this.toIndentedJsonString());
         return MFS1.write(Application.storagePath + "/configs/daemons/" + slot + ".json", this.toIndentedJsonString());
     }
 
     public void reload() {
         String content = MFS1.readString(Application.storagePath + "/configs/daemons/" + slot + ".json");
-        if (content == null) {return;}
+        if (content == null) {
+            SystemLogs.log("WARNING", "Content is empty.");
+            return;
+        }
         fromJson(JsonParser.parseString(content).getAsJsonObject());
     }
 }

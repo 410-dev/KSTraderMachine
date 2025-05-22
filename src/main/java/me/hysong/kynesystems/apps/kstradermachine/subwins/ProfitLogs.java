@@ -134,11 +134,11 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
                 if (!cachedConverters.containsKey(converterCacheId)) {
                     try {
                         Map<String, Class<?>> converterDrivers = Drivers.DriverIntrospection.findImplementations(CurrencyUnitConverter.class);
-                        System.out.println("Found " + converterDrivers.size() + " converters. Looking for " + converterCacheId);
+                        SystemLogs.log("INFO", "Found " + converterDrivers.size() + " converters. Looking for " + converterCacheId);
                         for (Class<?> driver : converterDrivers.values()) {
                             CurrencyUnitConverter instantConverter = (CurrencyUnitConverter) driver.getDeclaredConstructor().newInstance();
                             if (!instantConverter.getTo().equals(sumUnit)) {
-                                System.out.println("Warning: " + converterCacheId + " does not support " + instantConverter.getTo() + " currency units");
+                                SystemLogs.log("WARNING", "" + converterCacheId + " does not support " + instantConverter.getTo() + " currency units");
                                 continue; // Don't load unnecessary converters
                             }
                             cachedConverters.put(instantConverter.getFrom() + "2" + instantConverter.getTo(), instantConverter);
