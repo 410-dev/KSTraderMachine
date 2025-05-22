@@ -1,5 +1,6 @@
 package me.hysong.apis.kstrader.v1.objects;
 
+import liblks.security.CoreSHA;
 import lombok.Getter;
 import me.hysong.atlas.utils.SIDKit;
 
@@ -33,4 +34,22 @@ public class Account {
         this.credentials.put(CREDENTIAL_KEY_SK, sk);
     }
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountType='" + accountType + '\'' +
+                ", exchange='" + exchange + '\'' +
+                ", credentials=" + credentials +
+                ", charts=" + charts +
+                ", orders=" + orders +
+                '}';
+    }
+
+    public String getUniqueID() {
+        StringBuilder sb = new StringBuilder();
+        for (Object v : credentials.values()) {
+            sb.append(v.toString());
+        }
+        return CoreSHA.hash256(sb.toString()).toUpperCase();
+    }
 }
