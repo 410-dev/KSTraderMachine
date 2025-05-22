@@ -1,9 +1,14 @@
 package me.hysong.atlas.sdk.graphite.v1;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class KSGraphicalApplication extends JPanel{
+
+    @Getter private boolean isDisposeQueue = false;
+
     public GPSplashWindow getSplashWindow() {return null;}
 
     public abstract int getWindowWidth();
@@ -27,5 +32,9 @@ public abstract class KSGraphicalApplication extends JPanel{
     }
     public boolean refreshByFPS() {
         return false;
+    }
+
+    public void dispose() {
+        isDisposeQueue = true;
     }
 }
