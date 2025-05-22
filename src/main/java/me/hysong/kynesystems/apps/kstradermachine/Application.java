@@ -11,18 +11,15 @@ import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystem.services.notification.NotificationObject;
-import me.hysong.kynesystems.apps.kstradermachine.backend.Config;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
-import me.hysong.kynesystems.apps.kstradermachine.backend.objects.TraderDaemon;
-import me.hysong.kynesystems.apps.kstradermachine.backend.startup.LicenseSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.backend.startup.StorageSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
+import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
+import me.hysong.kynesystems.apps.kstradermachine.objects.DaemonCfg;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.AboutWindow;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.EditDaemon;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.ProfitLogs;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
-import org.apache.commons.codec.language.bm.Lang;
-import org.intellij.lang.annotations.Flow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +33,7 @@ import java.util.HashMap;
 public class Application extends KSGraphicalApplication implements KSApplication {
 
     public static Application currentInstance;
+    public static String storagePath;
 
     private final String appDisplayName = "Kyne Systems Trader Machine";
     private final int windowWidth = 800;
@@ -56,7 +54,6 @@ public class Application extends KSGraphicalApplication implements KSApplication
     private HashMap<Integer, DaemonPanel> daemonStatusPanels;
 
     // --- Trading log panel
-    private JPanel tradingLogPanel;
     private JTextArea tradingLogTextArea;
     private JScrollPane tradingLogScrollPane;
 
@@ -66,7 +63,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
     private JButton allStopButton;
 
     // --- Memory
-    private HashMap<Integer, TraderDaemon> daemonMap = new HashMap<>();
+    private final HashMap<Integer, Daemon> daemonMap = new HashMap<>();
 
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {
@@ -88,7 +85,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
         splashWindow.setSplashBackend(new Thread(() -> {
             // Locate storage path
-            String storagePath = StorageSetupTool.init(splashWindow);
+            storagePath = StorageSetupTool.init(splashWindow);
             StorageSetupTool.copyDefault(splashWindow, storagePath);
 
             // TODO Check activation
@@ -215,6 +212,27 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 throw new RuntimeException(e);
             }
 
+            // Load daemons
+            try {
+                splashWindow.setCurrentStatus("Loading configurations...");
+                String[] flist = MFS1.listFiles(storagePath + "/configs/daemons", false);
+                for (String fileName : flist) {
+                    if (!fileName.endsWith(".json")) {
+                        continue;
+                    }
+                    try {
+                        int slot = Integer.parseInt(fileName.replace(".json", ""));
+                        Daemon dm = new Daemon(slot, new DaemonCfg());
+                        dm.reloadPreference();
+                        daemonMap.put(slot, dm);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // TODO Synchronize accounts for each drivers
 //            try {
 //                splashWindow.setCurrentStatus("Synchronizing accounts...");
@@ -261,14 +279,16 @@ public class Application extends KSGraphicalApplication implements KSApplication
             daemonStatusPanels = new HashMap<>();
             for (int i = 0; i < rows; i++) {
                 for (int ii = 0; ii < cols; ii++) {
-                    // Assuming DaemonPanel has a reasonable preferred size.
-                    // If not, you might need to set a preferred size on DaemonPanel, e.g.:
-                     DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
-                    // dp.setPreferredSize(new Dimension(150, 60)); // Example preferred size for each daemon cell
-//                    DaemonPanel dp = new DaemonPanel(LanguageKit.getValue("DAEMON") + " " + (i * cols + ii + 1), LanguageKit.getValue("STATUS") + ": OK", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
-//                    dp.setBorder(BorderFactory.createEtchedBorder()); // Add border to individual daemon panels for clarity
+                    DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
                     daemonStatusPanels.put(i * cols + ii, dp);
                     daemonGridPanel.add(dp);
+                    int finalI = i * cols + ii;
+                    dp.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            GraphiteProgramLauncher.launch(EditDaemon.class, new String[]{"slot=" + finalI});
+                        }
+                    });
                 }
             }
 
@@ -291,7 +311,6 @@ public class Application extends KSGraphicalApplication implements KSApplication
             middleHStackPanel.add(daemonGridPanel, gbcMiddle);
 
             // -- Trading log panel
-            // tradingLogPanel = new JPanel(); // Not directly needed if JScrollPane is added directly
             tradingLogTextArea = new JTextArea(10, 30); // Give some initial preferred size
             tradingLogTextArea.setEditable(false);
             tradingLogTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -318,7 +337,6 @@ public class Application extends KSGraphicalApplication implements KSApplication
             allActionButtonsPanel = new JPanel();
             allStartButton = new JButton(LanguageKit.getValue("ALLSTART_BUTTON_TEXT"));
             allStopButton = new JButton(LanguageKit.getValue("ALLSTOP_BUTTON_TEXT"));
-//            allActionButtonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Buttons centered within the panel
             allActionButtonsPanel.setLayout(new GridLayout(1, 0, 5, 0)); // NEW: 1 row, any columns, 5px hgap, 0px vgap
             allActionButtonsPanel.add(allStartButton);
             allActionButtonsPanel.add(allStopButton);
@@ -329,13 +347,6 @@ public class Application extends KSGraphicalApplication implements KSApplication
             gbcMain.weighty = 0.1; // 10% of window height
             gbcMain.fill = GridBagConstraints.BOTH; // Panel fills its allocated space
             add(allActionButtonsPanel, gbcMain);
-
-            // -- Debug borders (can be removed once layout is confirmed)
-//            topButtonBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//            middleHStackPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-//            daemonGridPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Added for daemonGridPanel
-//            tradingLogScrollPane.setBorder(BorderFactory.createLineBorder(Color.ORANGE)); // Added for scroll pane
-//            allActionButtonsPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
             // Add button actions
             aboutButton.addMouseListener(new MouseAdapter() {
