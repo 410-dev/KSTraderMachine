@@ -309,12 +309,14 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
             @Override
             public void mouseClicked(MouseEvent e) {
                 daemon.start();
+                populateFormFromDaemonCfg();
             }
         });
         stopButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 daemon.terminate();
+                populateFormFromDaemonCfg();
             }
         });
 
