@@ -15,7 +15,7 @@ public class DaemonPanel extends JPanel {
     private JLabel desc_strategyName;
     private ParameteredRunnable paintingAlgorithm;
     private Color preferredColor;
-    private int flashLatency = 10;
+    private int flashLatency = 50;
     private Thread refreshThread;
     private Daemon holdingDaemon;
     private boolean terminateRefreshThread = false;
@@ -24,7 +24,6 @@ public class DaemonPanel extends JPanel {
     public static final Color COLOR_STARTING_UP = Color.ORANGE;
     public static final Color COLOR_ERROR = Color.RED;
     public static final Color COLOR_NOT_RUNNING = Color.GRAY;
-    public static final Color COLOR_WAITING = Color.CYAN;
     public static Color COLOR_IDLE = Color.WHITE; // If dark theme, it could be black.
     public static Color COLOR_TEXT = Color.BLACK; // If dark theme, it could be white.
 
@@ -58,8 +57,8 @@ public class DaemonPanel extends JPanel {
                 repaint();
                 revalidate();
                 if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
-                    this.title_symbolAndExchange.setText(daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName());
-                    this.desc_strategyName.setText(daemon.getStrategyManifest().getStrategyName());
+                    this.title_symbolAndExchange.setText(daemon.getCfg().getLabel());
+                    this.desc_strategyName.setText("<html>" + daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName() + "<br>" + daemon.getStrategyManifest().getStrategyName() + "</html>");
                 }
                 try {
                     Thread.sleep(flashLatency);
