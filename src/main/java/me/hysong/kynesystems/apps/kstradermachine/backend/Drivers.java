@@ -1,5 +1,7 @@
 package me.hysong.kynesystems.apps.kstradermachine.backend;
 
+import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
+import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
 import me.hysong.kynesystems.apps.kstradermachine.Application;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 
@@ -20,7 +22,9 @@ public class Drivers {
     private static DriverLoader classLoader = new DriverLoader(new URL[]{}, Application.class.getClassLoader());
 
     public final static HashMap<String, Class<?>> drivers = new HashMap<>();
+    public final static HashMap<String, TraderDriverManifestV1> driversInstantiated = new HashMap<>();
     public final static HashMap<String, Class<?>> strategies = new HashMap<>();
+    public final static HashMap<String, TraderStrategyManifestV1> strategiesInstantiated = new HashMap<>();
 
     public static class DriverLoader extends URLClassLoader {
         public DriverLoader(URL[] initial, ClassLoader parent) {

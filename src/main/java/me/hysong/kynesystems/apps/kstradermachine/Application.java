@@ -16,10 +16,7 @@ import me.hysong.kynesystems.apps.kstradermachine.backend.startup.StorageSetupTo
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
 import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
 import me.hysong.kynesystems.apps.kstradermachine.objects.DaemonCfg;
-import me.hysong.kynesystems.apps.kstradermachine.subwins.AboutWindow;
-import me.hysong.kynesystems.apps.kstradermachine.subwins.EditDaemon;
-import me.hysong.kynesystems.apps.kstradermachine.subwins.ProfitLogs;
-import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,6 +77,75 @@ public class Application extends KSGraphicalApplication implements KSApplication
         return 0;
     }
 
+    public void reloadDrivers() {
+        // Load drivers
+        try {
+            Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/drivers")));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to load drivers", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        // Index drivers
+        try {
+            HashMap<String, Class<?>> drivers = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderDriverManifestV1.class);
+            for (String key : drivers.keySet()) {
+                Class<?> driverClass = drivers.get(key);
+                SystemLogs.log("INFO", "Driver: " + key + " -> " + driverClass.getName());
+                try {
+                    TraderDriverManifestV1 manifest = (TraderDriverManifestV1) driverClass.getDeclaredConstructor().newInstance();
+                    Drivers.driversInstantiated.put(key, manifest);
+                    Drivers.drivers.put(key, driverClass);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Drivers not instantiated!", "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                    throw new RuntimeException("Driver instantiation failed", ex);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Drivers are not loaded!", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public void reloadStrategies() {
+        // Load strategies
+        try {
+            Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/strategies")));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to load strategies", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        // Index strategies
+        try {
+            HashMap<String, Class<?>> strategies = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderStrategyManifestV1.class);
+            for (String key : strategies.keySet()) {
+                Class<?> strategyClass = strategies.get(key);
+                SystemLogs.log("INFO", "Strategy: " + key + " -> " + strategyClass.getName());
+                try {
+                    TraderStrategyManifestV1 manifest = (TraderStrategyManifestV1) strategyClass.getDeclaredConstructor().newInstance();
+                    Drivers.strategiesInstantiated.put(key, manifest);
+                    Drivers.strategies.put(key, strategyClass);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Drivers not instantiated!", "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                    throw new RuntimeException("Driver instantiation failed", ex);
+                }
+//                    Drivers.strategies.put(key, strategyClass);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Strategies are not loaded!", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public GPSplashWindow getSplashWindow() {
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
@@ -138,40 +204,8 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 }
             }
 
-            // Load drivers
-            try {
-                splashWindow.setCurrentStatus("Loading drivers...");
-                Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/drivers")));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(splashWindow, "Failed to load drivers", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-
-            // Load strategies
-            try {
-                splashWindow.setCurrentStatus("Loading strategies...");
-                Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/strategies")));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(splashWindow, "Failed to load strategies", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-
-            // Index drivers
-            try {
-                splashWindow.setCurrentStatus("Indexing drivers...");
-                HashMap<String, Class<?>> drivers = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderDriverManifestV1.class);
-                for (String key : drivers.keySet()) {
-                    Class<?> driverClass = drivers.get(key);
-                    SystemLogs.log("INFO", "Driver: " + key + " -> " + driverClass.getName());
-                    Drivers.drivers.put(key, driverClass);
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(splashWindow, "Drivers are not loaded!", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            reloadDrivers();
+            reloadStrategies();
 
             // Test driver connection
             SystemLogs.log("INFO", "Loaded drivers: " + Drivers.drivers.size());
@@ -195,21 +229,6 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 } else {
                     SystemLogs.log("INFO", "Driver class " + driverClass.getName() + " is not a valid TraderDriverManifest.");
                 }
-            }
-
-            // Index strategies
-            try {
-                splashWindow.setCurrentStatus("Indexing strategies...");
-                HashMap<String, Class<?>> strategies = (HashMap<String, Class<?>>) Drivers.DriverIntrospection.findImplementations(TraderStrategyManifestV1.class);
-                for (String key : strategies.keySet()) {
-                    Class<?> strategyClass = strategies.get(key);
-                    SystemLogs.log("INFO", "Strategy: " + key + " -> " + strategyClass.getName());
-                    Drivers.strategies.put(key, strategyClass);
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(splashWindow, "Strategies are not loaded!", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                throw new RuntimeException(e);
             }
 
             // Load daemons
@@ -281,7 +300,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 for (int ii = 0; ii < cols; ii++) {
                     int idx = i * cols + ii;
                     SystemLogs.log("INFO", "Displaying daemon " + idx);
-                    DaemonPanel dp = new DaemonPanel("N/A", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING, daemonMap.get(idx));
+                    DaemonPanel dp = new DaemonPanel("-", "Not Configured", DaemonPanel.DaemonStatusOutlook.NOT_RUNNING, daemonMap.get(idx));
                     daemonStatusPanels.put(idx, dp);
                     daemonGridPanel.add(dp);
                     dp.addMouseListener(new MouseAdapter() {
@@ -356,6 +375,12 @@ public class Application extends KSGraphicalApplication implements KSApplication
                     GraphiteProgramLauncher.launch(AboutWindow.class, new String[]{});
                 }
             });
+            basicSettingsButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GraphiteProgramLauncher.launch(SettingsWindow.class, new String[]{});
+                }
+            });
             logsButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -366,6 +391,25 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     GraphiteProgramLauncher.launch(ProfitLogs.class, new String[]{});
+                }
+            });
+
+            allStartButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    for (Daemon d : daemonMap.values()) {
+                        d.start();
+                    }
+                    JOptionPane.showMessageDialog(null, "All daemons started.");
+                }
+            });
+            allStopButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    for (Daemon d : daemonMap.values()) {
+                        d.terminate();
+                    }
+                    JOptionPane.showMessageDialog(null, "All daemons terminate queued.");
                 }
             });
 
