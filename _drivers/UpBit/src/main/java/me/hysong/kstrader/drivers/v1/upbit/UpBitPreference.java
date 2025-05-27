@@ -42,8 +42,8 @@ public class UpBitPreference extends TraderDriverSettingsV1 {
         ko_kr.put("option.leverage", "옵션 레버리지. 기본값은 1입니다.");
 
         HashMap<String, HashMap<String, String>> descriptions = new HashMap<>();
-        descriptions.put("en_us", en_us);
-        descriptions.put("ko_kr", ko_kr);
+        descriptions.put("en-us", en_us);
+        descriptions.put("ko-kr", ko_kr);
         return descriptions;
     }
 
