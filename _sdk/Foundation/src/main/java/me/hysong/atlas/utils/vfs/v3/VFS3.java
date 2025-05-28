@@ -41,10 +41,16 @@ public class VFS3 implements Serializable {
     private long ioProcessorStorageStartAddress = -1;
     private int ioProcessorStorageSize = 0;
     private long lastKnownDataEndPtr;
-//    private Promise<Object> Paths;
 
     public VFS3() { this.headerComposition = new VFS3HeaderComposition(); }
+
+    public VFS3(String diskPath) {
+        this.headerComposition = new VFS3HeaderComposition();
+        loadDisk(diskPath);
+    }
+
     public VFS3(VFS3HeaderComposition comp) { this.headerComposition = Objects.requireNonNull(comp); }
+
     public void setExternalClassLoader(ClassLoader cl) { this.externalClassLoader = cl; }
 
     private void instantiateAndLoadIOProcessor() throws Exception {
@@ -638,6 +644,28 @@ public class VFS3 implements Serializable {
         return allSuccess;
     }
 
+    public String getReportString() {
+        ensureFormatted();
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- VFS Info ---");
+        sb.append("\n").append("Disk Size: ").append(formatBytes(getTotalBytes()));
+        sb.append("\n").append("Header Size on Disk: ").append(formatBytes(headerSizeOnDisk));
+        sb.append("\n").append("FAT Start Address: ").append(fatStartAddress);
+        sb.append("\n").append("Data Area Start Address: ").append(dataAreaStartAddress);
+        sb.append("\n").append("IO Proc Storage Start: ").append(ioProcessorStorageStartAddress == -1 ? "N/A" : ioProcessorStorageStartAddress).append(", Size: ").append(formatBytes(ioProcessorStorageSize));
+        sb.append("\n").append("Last Known Data End Ptr: ").append(lastKnownDataEndPtr);
+        sb.append("\n").append("Max Files: ").append(headerComposition.getMaxFilesCount());
+        sb.append("\n").append("Max Filename Length: ").append(headerComposition.getMaxFileNameLength());
+        sb.append("\n").append("Enable Fast Recovery: ").append(headerComposition.isEnableFastRecovery());
+        sb.append("\n").append("IO Processor: ").append(ioProcessor.getClass().getName());
+        sb.append("\n").append("--- Usage ---");
+        sb.append("\n").append("Logical Used: ").append(formatBytes(getUsedBytesLogical()));
+        sb.append("\n").append("Logical Free (Total - Used): ").append(formatBytes(getFreeBytesLogical()));
+        sb.append("\n").append("Physical Free (Append): ").append(formatBytes(getFreeBytesPhysicalAppend()));
+        sb.append("\n").append("Fragmentation (Est.): ").append(formatBytes(getFreeBytesPhysicalAppend() - getFreeBytesLogical()));
+        return sb.toString();
+    }
+
     public boolean imageToRealDisk(File targetDirectory) {
         ensureFormatted();
         if (!targetDirectory.exists()) {
@@ -749,22 +777,7 @@ public class VFS3 implements Serializable {
                     case "save": String sp=line.isEmpty()?vfs.loadedVfsPath:line; if(sp==null||sp.trim().isEmpty()){System.err.println("No path for save.");break;} vfs.saveDisk(sp); break;
                     case "info":
                         vfs.ensureFormatted(); // Throws if not formatted
-                        System.out.println("--- VFS Info ---");
-                        System.out.println("Disk Size: " + formatBytes(vfs.getTotalBytes()));
-                        System.out.println("Header Size on Disk: " + formatBytes(vfs.headerSizeOnDisk));
-                        System.out.println("FAT Start Address: " + vfs.fatStartAddress);
-                        System.out.println("Data Area Start Address: " + vfs.dataAreaStartAddress);
-                        System.out.println("IO Proc Storage Start: " + (vfs.ioProcessorStorageStartAddress == -1 ? "N/A" : vfs.ioProcessorStorageStartAddress) + ", Size: " + formatBytes(vfs.ioProcessorStorageSize));
-                        System.out.println("Last Known Data End Ptr: " + vfs.lastKnownDataEndPtr);
-                        System.out.println("Max Files: " + vfs.headerComposition.getMaxFilesCount());
-                        System.out.println("Max Filename Length: " + vfs.headerComposition.getMaxFileNameLength());
-                        System.out.println("Enable Fast Recovery: " + vfs.headerComposition.isEnableFastRecovery());
-                        System.out.println("IO Processor: " + vfs.ioProcessor.getClass().getName());
-                        System.out.println("--- Usage ---");
-                        System.out.println("Logical Used: " + formatBytes(vfs.getUsedBytesLogical()));
-                        System.out.println("Logical Free (Total - Used): " + formatBytes(vfs.getFreeBytesLogical()));
-                        System.out.println("Physical Free (Append): " + formatBytes(vfs.getFreeBytesPhysicalAppend()));
-                        System.out.println("Fragmentation (Est.): " + formatBytes(vfs.getFreeBytesPhysicalAppend() - vfs.getFreeBytesLogical()));
+                        System.out.println(vfs.getReportString());
                         break;
                     case "ls": vfs.list(); break;
                     case "write":
