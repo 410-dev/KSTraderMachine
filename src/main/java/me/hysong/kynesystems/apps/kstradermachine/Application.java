@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
+import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
@@ -11,6 +12,7 @@ import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
+import me.hysong.kynesystem.services.notification.NotificationObject;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.backend.startup.StorageSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
@@ -74,6 +76,12 @@ public class Application extends KSGraphicalApplication implements KSApplication
 //            NotificationObject notification = new NotificationObject((o) -> {}, (o) -> {}, "KSTraderMachine " + i, "Welcome to KSTrader Machine!");
 //            notification.dispatch();
 //        }
+        if (!NotificationObject.isServerUp()) {
+            System.out.println("NOTIFICATION SERVER DOWN");
+            JOptionPane.showMessageDialog(null, "Warning: It seems KSNotificationServer is down. Important notification may be missed.", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            System.out.println("Notification server is up and running.");
+        }
         return 0;
     }
 
