@@ -37,9 +37,13 @@ public class NotificationServer implements KSService {
         // Initialize the server
         try {
             notificationServer = new KSSocket("127.0.0.1", port, (request, decodedPayload) -> {
-                if (!NotificationObject.class.isAssignableFrom(decodedPayload.getClass())) {
+                if (!NotificationObject.class.isAssignableFrom(decodedPayload.getClass()) && !NotificationServerTestingObject.class.isAssignableFrom(decodedPayload.getClass())) {
                     System.out.println("[NotificationServer] Error: Received object is not NotificationObject: " + decodedPayload.getClass().getName());
                     return "error:type_error";
+                }
+
+                if (NotificationServerTestingObject.class.isAssignableFrom(decodedPayload.getClass())) {
+                    return new NotificationServerTestingObject("Hello from Server 1");
                 }
 
                 NotificationObject notificationObject = (NotificationObject) decodedPayload;

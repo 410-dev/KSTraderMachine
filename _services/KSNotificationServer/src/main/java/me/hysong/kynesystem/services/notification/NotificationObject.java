@@ -68,4 +68,19 @@ public class NotificationObject implements Serializable {
             }
         }, onError);
     }
+
+    public static boolean isServerUp() {
+        NotificationObject no = new NotificationObject(null, null, null, null);
+        KSSocketPayload payload = new KSSocketPayload(new NotificationServerTestingObject("Hello from Client 1"), no.notificationSrvHost, no.notificationSrvPort, NotificationServer.KSNS_GENERIC_AUTH_SEED);
+        try {
+            Object o = payload.dispatchSync();
+            if (o instanceof NotificationServerTestingObject to) {
+                return to.getMessage().equals("Hello from Server 1");
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
