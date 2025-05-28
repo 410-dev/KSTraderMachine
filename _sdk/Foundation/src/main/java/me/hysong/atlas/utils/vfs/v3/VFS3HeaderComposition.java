@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 @Getter
 @Setter
 @Accessors(chain = true)
-class VFS3HeaderComposition implements Serializable {
+public class VFS3HeaderComposition implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String magicNumberContent = "ATLAS_VFS3";
