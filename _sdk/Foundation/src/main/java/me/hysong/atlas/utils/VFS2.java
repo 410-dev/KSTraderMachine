@@ -395,14 +395,53 @@ public class VFS2 {
         System.out.println("Successfully exported VFS file '" + vfsFileName + "' to '" + realFile.getAbsolutePath() + "'.");
         return true;
     }
-//
-//    public boolean imageFromDisk(File source, String head, int maxDepth) {
-//        // TODO
-//    }
-//
-//    public boolean imageToDisk(File target) {
-//        // TODO
-//    }
+
+    private ArrayList<File> rdTraverse(File source, int currentDepth, int maxDepth) {
+        File[] files = source.listFiles();
+        if (files == null) {
+            return new ArrayList<>();
+        }
+        ArrayList<File> result = new ArrayList<>();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (currentDepth < maxDepth || maxDepth < 0) {
+                    result.addAll(rdTraverse(file, currentDepth + 1, maxDepth));
+                } else {
+                    result.add(file);
+                }
+            } else if (file.isFile()) {
+                result.add(file);
+            }
+        }
+        return result;
+    }
+
+    public boolean imageFromRealDisk(File source, String removeHead, int maxDepth) {
+        boolean allSuccess = true;
+        ArrayList<File> files = rdTraverse(source, 0, maxDepth);
+        for (File file : files) {
+            String localFileName = file.getAbsolutePath().replace(removeHead, "");
+            boolean success = fromDisk(localFileName, file, true);
+            if (!success) {
+                System.err.println("Error: Failed to import '" + file.getAbsolutePath() + "' to '" + localFileName + "'.");
+                allSuccess = false;
+            }
+        }
+        return allSuccess;
+    }
+
+    public boolean imageToRealDisk(File target) {
+        boolean allSuccess = true;
+        ArrayList<String> filesLocal = list();
+        for (String file : filesLocal) {
+            boolean success = toDisk(file, target, false);
+            if (!success) {
+                System.err.println("Error: Failed to export '" + file + "' to '" + target.getAbsolutePath() + "'.");
+                allSuccess = false;
+            }
+        }
+        return allSuccess;
+    }
 
     // --- Low-Level Disk Access ---
 
