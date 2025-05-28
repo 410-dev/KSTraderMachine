@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hysong.atlas.async.ParameteredRunnable;
 import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
+import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,9 +57,13 @@ public class DaemonPanel extends JPanel {
                 paintingAlgorithm.run(this, getBackground(), preferredColor);
                 repaint();
                 revalidate();
-                if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
-                    this.title_symbolAndExchange.setText(daemon.getCfg().getLabel());
-                    this.desc_strategyName.setText("<html>" + daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName() + "<br>" + daemon.getStrategyManifest().getStrategyName() + "</html>");
+                if (daemon != null && daemon.getCfg() != null) {
+                    if (daemon.getCfg().getSymbol() != null && !daemon.getCfg().getSymbol().isEmpty() && daemon.getDriverManifest() != null && daemon.getStrategyManifest() != null) {
+                        this.title_symbolAndExchange.setText(daemon.getCfg().getLabel());
+                        this.desc_strategyName.setText("<html>" + daemon.getCfg().getSymbol() + "@" + daemon.getDriverManifest().getDriverExchangeName() + "<br>" + daemon.getStrategyManifest().getStrategyName() + "</html>");
+                    }
+                } else {
+                    SystemLogs.log("ERROR", "Daemon status outlook null at " + daemon.getSlot());
                 }
                 try {
                     Thread.sleep(flashLatency);
