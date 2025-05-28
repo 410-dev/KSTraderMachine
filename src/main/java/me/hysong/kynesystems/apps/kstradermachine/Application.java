@@ -152,7 +152,11 @@ public class Application extends KSGraphicalApplication implements KSApplication
         splashWindow.setSplashBackend(new Thread(() -> {
             // Locate storage path
             storagePath = StorageSetupTool.init(splashWindow);
-            StorageSetupTool.copyDefault(splashWindow, storagePath);
+            boolean needCopy = storagePath.toLowerCase().startsWith("f");
+            storagePath = storagePath.substring(1);
+            if (needCopy) {
+                StorageSetupTool.copyDefault(splashWindow, storagePath);
+            }
 
             // TODO Check activation
 //            boolean activated = LicenseSetupTool.isLicensed(splashWindow, storagePath);
