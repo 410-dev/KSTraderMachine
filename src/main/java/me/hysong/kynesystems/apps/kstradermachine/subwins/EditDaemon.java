@@ -97,6 +97,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         }
         daemonCfg = new DaemonCfg();
         daemonCfg.fromJson(JsonParser.parseString(content).getAsJsonObject());
+        daemonCfg.setSlot(slot);
         daemon = Application.currentInstance.getDaemonMap().get(slot);
 
         setLayout(new GridBagLayout()); // Main layout for the EditDaemon panel
@@ -166,7 +167,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         // Exchange Driver (JComboBox)
         addLabel.accept("Exchange Driver:", formRow);
         exchangeDriverOptions.clear(); // Clear if appMain can be called multiple times for the same instance
-        exchangeDriverOptions.add("<Not Selected>");
+        exchangeDriverOptions.add("");
         HashMap<String, Class<?>> drvManifests = Drivers.drivers;
         for (String className : drvManifests.keySet()) {
             try {
@@ -191,7 +192,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
                 }
             }
             if (!found && exchangeDriverComboBox.getItemCount() > 0) {
-                exchangeDriverComboBox.setSelectedIndex(0); // Default to <Not Selected> if not found
+                exchangeDriverComboBox.setSelectedIndex(0); // Default to "" if not found
             }
         } else if (exchangeDriverComboBox.getItemCount() > 0) {
             exchangeDriverComboBox.setSelectedIndex(0); // Default if no class stored
@@ -202,7 +203,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         // Strategy Name (JComboBox)
         addLabel.accept("Strategy Name:", formRow);
         strategyNameOptions.clear(); // Clear for fresh population
-        strategyNameOptions.add("<Not Selected>");
+        strategyNameOptions.add("");
         HashMap<String, Class<?>> strManifest = Drivers.strategies;
         for (String className : strManifest.keySet()) {
             try {
@@ -343,6 +344,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
 
         // --- Initial UI State & Data Loading ---
         populateFormFromDaemonCfg();
+        populateToggles();
         setupActionListenersAndDynamicBehavior(); // Method to be created
 
         return 0;
@@ -416,15 +418,8 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
                 editStrategySettingsButton.setEnabled(true);
                 symbolTextField.setEnabled(true);
                 maxCashTextField.setEnabled(true);
-                // TODO: Enable/disable Trader Mode buttons (spot, perpet, future, option)
-                // based on selectedStrategy's capabilities.
-                // Example: boolean supportsFuture = checkStrategySupportsFuture(selectedStrategy);
-                // futureToggleButton.setEnabled(supportsFuture);
-                // optionToggleButton.setEnabled(checkStrategySupportsOption(selectedStrategy));
 
-                // TODO: Enable order mode buttons
-                marketToggleButton.setEnabled(true);
-                limitToggleButton.setEnabled(true);
+                populateToggles();
             } else {
                 editStrategySettingsButton.setEnabled(false);
                 symbolTextField.setEnabled(false);
@@ -494,5 +489,54 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         // TODO: Add action listeners for Run, Stop, EditStrategySettings, etc.
         // TODO: Implement logic for dynamic enabling/disabling based on strategy capabilities for Trader Modes.
         // TODO: Implement warnings for Limit order mode.
+    }
+
+    private void populateToggles() {
+        String selectedStrategy = (String) strategyNameComboBox.getSelectedItem();
+        String selectedDriver = (String) exchangeDriverComboBox.getSelectedItem();
+
+        if (selectedStrategy == null || selectedStrategy.trim().isEmpty() || selectedDriver == null || selectedDriver.trim().isEmpty()) {
+            spotToggleButton.setEnabled(false);
+            perpetToggleButton.setEnabled(false);
+            futureToggleButton.setEnabled(false);
+            optionToggleButton.setEnabled(false);
+            marketToggleButton.setEnabled(false);
+            limitToggleButton.setEnabled(false);
+            return;
+        }
+
+        String driverClassName = "";
+        String strategyClassName = "";
+        try {
+            driverClassName = selectedDriver.split(": ")[1];
+            strategyClassName = selectedStrategy.split(": ")[1];
+        } catch (Exception ex) {
+            SystemLogs.log("ERROR", "Selection invalid: " + selectedDriver + ", " + selectedStrategy);
+            return;
+        }
+
+        TraderDriverManifestV1 drvManifest = Drivers.driversInstantiated.get(driverClassName);
+        TraderStrategyManifestV1 stgManifest = Drivers.strategiesInstantiated.get(strategyClassName);
+
+        if (drvManifest == null || stgManifest == null) {
+            SystemLogs.log("ERROR", "Failed loading designated drivers");
+            return;
+        }
+
+        boolean spot = drvManifest.isSupportSpot() && stgManifest.isSupportSpot();
+        boolean perp = drvManifest.isSupportPerpetual() && stgManifest.isSupportPerpetual();
+        boolean futu = drvManifest.isSupportFuture() && stgManifest.isSupportFuture();
+        boolean optn = drvManifest.isSupportOption() && stgManifest.isSupportOption();
+
+        spotToggleButton.setEnabled(spot);
+        perpetToggleButton.setEnabled(perp);
+        futureToggleButton.setEnabled(futu);
+        optionToggleButton.setEnabled(optn);
+
+        boolean market = drvManifest.isSupportOrderAsMarket() && stgManifest.isSupportOrderAsMarket();
+        boolean limit = drvManifest.isSupportOrderAsLimit() && stgManifest.isSupportOrderAsLimit();
+
+        marketToggleButton.setEnabled(market);
+        limitToggleButton.setEnabled(limit);
     }
 }
