@@ -6,6 +6,12 @@ public interface TraderStrategyManifestV1 {
     String getStrategyVersion();
     boolean isForWS();
     boolean isForREST();
+    boolean isSupportSpot();
+    boolean isSupportFuture();
+    boolean isSupportOption();
+    boolean isSupportPerpetual();
+    boolean isSupportOrderAsLimit();
+    boolean isSupportOrderAsMarket();
 
     RESTStrategyV1 getRESTStrategy();
     WSStrategyV1 getWSStrategy();

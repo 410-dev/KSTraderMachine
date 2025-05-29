@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import lombok.Setter;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class TraderDriverSettingsV1 {
@@ -16,11 +17,16 @@ public abstract class TraderDriverSettingsV1 {
     public abstract HashMap<String, HashMap<String, String>> getLabels();
     public abstract HashMap<String, Object> getValues();
     public abstract HashMap<String, Object> getDefaults();
-
+    public abstract ArrayList<String> getOrderedKey();
     public abstract String getExchange();
     public abstract String getEndpoint();
+    public abstract boolean validateValue(String key);
 
     public TraderDriverSettingsV1(String driverCfgPath) {
+        this.driverCfgPath = driverCfgPath;
+    }
+
+    public void compose() {
         // Read the JSON file
         this.driverCfgPath = driverCfgPath;
         StringBuilder jsonContent = new StringBuilder();
@@ -131,7 +137,7 @@ public abstract class TraderDriverSettingsV1 {
         }
     }
 
-    public void save() {
+    public boolean save() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("version", 1);
         JsonObject linkage = new JsonObject();
@@ -155,7 +161,9 @@ public abstract class TraderDriverSettingsV1 {
         } catch (IOException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.err.println("Failed to write the JSON file: " + driverCfgPath);
+            return false;
         }
+        return true;
     }
 
 }
