@@ -57,7 +57,7 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
         tableModel = new ProfitTableModel(profitEntries);
         profitTable = new JTable(tableModel);
         profitTable.setFillsViewportHeight(true); // Makes table use entire height of scroll pane
-        profitTable.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        profitTable.setFont(profitTable.getFont().deriveFont(Font.PLAIN, 12));
         profitTable.setRowHeight(25);
 
         // Optional: Set column widths (example)
@@ -89,11 +89,11 @@ public class ProfitLogs extends KSGraphicalApplication implements KSApplication 
         JPanel bottomPanel = new JPanel(new BorderLayout(10, 0)); // BorderLayout with horizontal gap
 
         totalProfitLabel = new JLabel("Total Profit: calculating... USDT"); // Initial text
-        totalProfitLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+        totalProfitLabel.setFont(totalProfitLabel.getFont().deriveFont(Font.BOLD, 14));
         bottomPanel.add(totalProfitLabel, BorderLayout.WEST);
 
         refreshButton = new JButton("Refresh");
-        refreshButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        refreshButton.setFont(refreshButton.getFont().deriveFont(Font.PLAIN, 12));
         // Add an empty panel to push the refresh button to the right if desired,
         // or use a different layout for more precise control if BorderLayout isn't enough.
         JPanel refreshButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0,0)); // Aligns button to right
