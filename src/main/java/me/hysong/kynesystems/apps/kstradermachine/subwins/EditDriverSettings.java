@@ -200,7 +200,11 @@ public class EditDriverSettings extends JFrame {
 
             // Validate
             for (String key : settings.getValues().keySet()) {
-                settings.validateValue(key);
+                String evaluationResult = settings.validateValue(key);
+                if (evaluationResult != null) {
+                    JOptionPane.showMessageDialog(null, evaluationResult, "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
 
             // Save the updated settings

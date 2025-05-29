@@ -19,8 +19,6 @@ public class UpBitPreference extends TraderDriverSettingsV1 {
         exchange = new UpBitDriverManifestV1().getDriverExchange();
         endpoint = new UpBitDriverManifestV1().getDriverAPIEndpoint();
         compose();
-        System.out.println("EXCHANGE=" + exchange);
-        System.out.println("ENDPOINT=" + endpoint);
     }
 
     @Override
@@ -43,27 +41,39 @@ public class UpBitPreference extends TraderDriverSettingsV1 {
     }
 
     @Override
-    public boolean validateValue(String key, Object value) {
+    public String validateValue(String key) {
         switch (key) {
             case "auth.apiAK", "auth.apiSK": {
-                return value instanceof String;
+                if (values.get(key) instanceof String) {
+                    return null;
+                } else {
+                    return "Expected String";
+                }
             }
             case "future.leverage": {
-                if (value instanceof Integer) {
-                    return ((Integer) value) < 10 && ((Integer) value) > 0;
+                if (values.get(key) instanceof Integer) {
+                    if (((Integer) values.get(key)) <= 10 && ((Integer) values.get(key)) > 0) {
+                        return null;
+                    } else {
+                        return "Future Leverage expected value between 0 exclusive to 10 inclusive.";
+                    }
                 } else {
-                    return false;
+                    return "Future leverage expected integer.";
                 }
             }
             case "option.leverage": {
-                if (value instanceof Integer) {
-                    return ((Integer) value) < 50 && ((Integer) value) > 0;
+                if (values.get(key) instanceof Integer) {
+                    if (((Integer) values.get(key)) <= 50 && ((Integer) values.get(key)) > 0) {
+                        return null;
+                    } else {
+                        return "Option Leverage expected value between 0 exclusive to 10 inclusive.";
+                    }
                 } else {
-                    return false;
+                    return "Option leverage expected integer.";
                 }
             }
             default:
-                return false;
+                return "Unidentified setting ID: " + key;
         }
     }
 

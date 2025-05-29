@@ -20,7 +20,7 @@ public abstract class TraderDriverSettingsV1 {
     public abstract ArrayList<String> getOrderedKey();
     public abstract String getExchange();
     public abstract String getEndpoint();
-    public abstract boolean validateValue(String key);
+    public abstract String validateValue(String key);
 
     public TraderDriverSettingsV1(String driverCfgPath) {
         this.driverCfgPath = driverCfgPath;
