@@ -42,7 +42,7 @@ public class Daemon {
                     break;
                 }
 
-                String preferenceFilePath = Application.storagePath + "/configs/drivers/" + driverManifest.getDriverExchange() + "@" + driverManifest.getDriverAPIEndpoint().replace("/", "_").replace(":", "_") + ".json";
+                String preferenceFilePath = Application.storagePath + "/configs/drivers/" + driverManifest.getFileSystemIdentifier() + ".json";
                 String preference = MFS1.readString(preferenceFilePath);
                 if (preference == null) {
                     SystemLogs.log("ERROR", "Driver configuration not found for slot " + cfg.getSlot() + " at " + preferenceFilePath + ". Please configure driver first. Terminating worker.");
