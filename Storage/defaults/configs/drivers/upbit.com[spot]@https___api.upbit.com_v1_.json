@@ -1,7 +1,7 @@
 {
     "version": 1,
     "linkage": {
-        "exchange": "upbit.comp[spot]",
+        "exchange": "upbit.com[spot]",
         "endpoint": "https://api.upbit.com/v1/"
     },
     "settings": {
