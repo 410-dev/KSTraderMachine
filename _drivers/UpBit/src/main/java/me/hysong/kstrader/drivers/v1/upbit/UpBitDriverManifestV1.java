@@ -21,6 +21,8 @@ public class UpBitDriverManifestV1 implements TraderDriverManifestV1 {
     private final boolean supportSpot = true;
     private final boolean supportWS = true;
     private final boolean supportREST = true;
+    private final boolean supportOrderAsMarket = true;
+    private final boolean supportOrderAsLimit = true;
     private final String driverUpdateDate = "2025-05-30";
     private final String[] supportedSymbols = new String[] {
             "KRW-BTC",

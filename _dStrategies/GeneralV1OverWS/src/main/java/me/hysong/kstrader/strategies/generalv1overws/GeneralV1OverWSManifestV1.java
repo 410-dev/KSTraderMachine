@@ -12,6 +12,12 @@ public class GeneralV1OverWSManifestV1 implements TraderStrategyManifestV1 {
     private final String strategyVersion = "1.0.0";
     private final boolean forWS = true;
     private final boolean forREST = false;
+    private final boolean supportOrderAsMarket = true;
+    private final boolean supportOrderAsLimit = true;
+    private final boolean supportFuture = false;
+    private final boolean supportOption = false;
+    private final boolean supportPerpetual = false;
+    private final boolean supportSpot = true;
 
 
     @Override

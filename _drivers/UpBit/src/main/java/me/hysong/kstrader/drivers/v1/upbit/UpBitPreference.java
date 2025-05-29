@@ -3,18 +3,24 @@ package me.hysong.kstrader.drivers.v1.upbit;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Getter
 public class UpBitPreference extends TraderDriverSettingsV1 {
 
-    private final String exchange = new UpBitDriverManifestV1().getDriverExchange();
-    private final String endpoint = new UpBitDriverManifestV1().getDriverAPIEndpoint();
+    private final String exchange;
+    private final String endpoint;
 
     private final HashMap<String, Object> values = new HashMap<>();
 
     public UpBitPreference(String driverCfgPath) {
         super(driverCfgPath);
+        exchange = new UpBitDriverManifestV1().getDriverExchange();
+        endpoint = new UpBitDriverManifestV1().getDriverAPIEndpoint();
+        compose();
+        System.out.println("EXCHANGE=" + exchange);
+        System.out.println("ENDPOINT=" + endpoint);
     }
 
     @Override
@@ -25,6 +31,40 @@ public class UpBitPreference extends TraderDriverSettingsV1 {
         types.put("future.leverage", Integer.class);
         types.put("option.leverage", Integer.class);
         return types;
+    }
+
+    public ArrayList<String> getOrderedKey() {
+        ArrayList<String> keys = new ArrayList<>();
+        keys.add("auth.apiAK");
+        keys.add("auth.apiSK");
+        keys.add("future.leverage");
+        keys.add("option.leverage");
+        return keys;
+    }
+
+    @Override
+    public boolean validateValue(String key, Object value) {
+        switch (key) {
+            case "auth.apiAK", "auth.apiSK": {
+                return value instanceof String;
+            }
+            case "future.leverage": {
+                if (value instanceof Integer) {
+                    return ((Integer) value) < 10 && ((Integer) value) > 0;
+                } else {
+                    return false;
+                }
+            }
+            case "option.leverage": {
+                if (value instanceof Integer) {
+                    return ((Integer) value) < 50 && ((Integer) value) > 0;
+                } else {
+                    return false;
+                }
+            }
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -62,8 +102,8 @@ public class UpBitPreference extends TraderDriverSettingsV1 {
         ko_kr.put("option.leverage", "옵션 레버리지");
 
         HashMap<String, HashMap<String, String>> labels = new HashMap<>();
-        labels.put("en_us", en_us);
-        labels.put("ko_kr", ko_kr);
+        labels.put("en-us", en_us);
+        labels.put("ko-kr", ko_kr);
         return labels;
     }
 
