@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +21,10 @@ import java.util.jar.JarFile;
 public class Drivers {
 
     private static DriverLoader classLoader = new DriverLoader(new URL[]{}, Application.class.getClassLoader());
+    private static ArrayList<String> jarsLoaded = new ArrayList<>();
 
     public final static HashMap<String, Class<?>> drivers = new HashMap<>();
-    public final static HashMap<String, TraderDriverManifestV1> driversInstantiated = new HashMap<>();
+    public final static HashMap<String, TraderDriverManifestV1> driversInstantiated = new HashMap<>(); // Key:
     public final static HashMap<String, Class<?>> strategies = new HashMap<>();
     public final static HashMap<String, TraderStrategyManifestV1> strategiesInstantiated = new HashMap<>();
 
@@ -30,13 +32,16 @@ public class Drivers {
         public DriverLoader(URL[] initial, ClassLoader parent) {
             super(initial, parent);
         }
-
         public void addJar(URL jarUrl) {
             super.addURL(jarUrl);
         }
     }
 
     public static void coreComponent(String pathToJar) throws Exception{
+        if (jarsLoaded.contains(pathToJar)) {
+            SystemLogs.log("WARNING", "Jar file " + pathToJar + " is not loaded because it is already loaded.");
+            return;
+        }
         File jarFile = new File(pathToJar);
         URL jarUrl = jarFile.toURI().toURL();
 
@@ -46,6 +51,7 @@ public class Drivers {
             classLoader.addJar(jarUrl);
         }
 
+        jarsLoaded.add(pathToJar);
         SystemLogs.log("INFO", "Loaded JAR: " + jarFile.getName());
     }
 
