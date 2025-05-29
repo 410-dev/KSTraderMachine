@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
-import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
@@ -26,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @Getter
@@ -85,7 +85,8 @@ public class Application extends KSGraphicalApplication implements KSApplication
         return 0;
     }
 
-    public void reloadDrivers() {
+    public void loadDrivers() {
+
         // Load drivers
         try {
             Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/drivers")));
@@ -120,7 +121,7 @@ public class Application extends KSGraphicalApplication implements KSApplication
 
     }
 
-    public void reloadStrategies() {
+    public void loadStrategies() {
         // Load strategies
         try {
             Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/strategies")));
@@ -155,14 +156,14 @@ public class Application extends KSGraphicalApplication implements KSApplication
     }
 
     @Override
-    public GPSplashWindow getSplashWindow() {
+    public GPSplashWindow getSplashWindow(String[] args) {
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
         splashWindow.setSplashBackend(new Thread(() -> {
             // Locate storage path
             storagePath = StorageSetupTool.init(splashWindow);
             boolean needCopy = storagePath.toLowerCase().startsWith("f");
             storagePath = storagePath.substring(1);
-            if (needCopy) {
+            if (needCopy || Arrays.stream(args).parallel().anyMatch(element -> element.equals("--reset-storage"))) {
                 StorageSetupTool.copyDefault(splashWindow, storagePath);
             }
 
@@ -216,8 +217,8 @@ public class Application extends KSGraphicalApplication implements KSApplication
                 }
             }
 
-            reloadDrivers();
-            reloadStrategies();
+            loadDrivers();
+            loadStrategies();
 
             // Test driver connection
             SystemLogs.log("INFO", "Loaded drivers: " + Drivers.drivers.size());
@@ -440,6 +441,26 @@ public class Application extends KSGraphicalApplication implements KSApplication
         splashWindow.setBackgroundColor(Color.BLACK);
         splashWindow.setImageLocation("path/to/splash/image.png"); // Set the path to your splash image
         return splashWindow;
+    }
+
+    public static void openFileExplorer(String path) {
+        File file = new File(path);
+
+        if (!file.exists()) {
+            System.err.println("Path does not exist: " + path);
+            return;
+        }
+
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            if (file.isDirectory()) {
+                desktop.open(file);  // opens the folder in the default file explorer
+            } else {
+                desktop.open(file.getParentFile());  // opens the folder containing the file
+            }
+        } catch (IOException | UnsupportedOperationException e) {
+            System.err.println("Failed to open file explorer: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
