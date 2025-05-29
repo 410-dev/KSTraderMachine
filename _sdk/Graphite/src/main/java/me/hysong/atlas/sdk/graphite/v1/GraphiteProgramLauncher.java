@@ -132,7 +132,7 @@ public class GraphiteProgramLauncher {
 
                         KSGraphicalApplication graphicalApplication = (KSGraphicalApplication) appInstance;
 
-                        GPSplashWindow splashWindowContent = graphicalApplication.getSplashWindow();
+                        GPSplashWindow splashWindowContent = graphicalApplication.getSplashWindow(args);
                         Thread splashBackend = new Thread(() -> System.out.println("There's no splash backend to run."));
                         JFrame splashFrame;
                         if (splashWindowContent != null) {

@@ -9,6 +9,7 @@ public abstract class KSGraphicalApplication extends JPanel{
 
     @Getter private boolean isDisposeQueue = false;
 
+    public GPSplashWindow getSplashWindow(String[] args) {return getSplashWindow();}
     public GPSplashWindow getSplashWindow() {return null;}
 
     public abstract int getWindowWidth();
