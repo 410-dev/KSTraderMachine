@@ -5,6 +5,7 @@ import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
+import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.kstradermachine.Application;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 
@@ -36,7 +37,7 @@ public class SettingsWindow extends KSGraphicalApplication implements KSApplicat
     private DefaultListModel<String> exchangesListModel;
 
     // Data: Exchanges map (key: display name, value: could be a configuration object or similar)
-    private final HashMap<String, Object> exchangesMap = new HashMap<>();
+    private final HashMap<String, TraderDriverManifestV1> exchangesMap = new HashMap<>();
 
     public SettingsWindow() {
         // Constructor: Initialize data or perform pre-UI setup if needed.
@@ -142,38 +143,23 @@ public class SettingsWindow extends KSGraphicalApplication implements KSApplicat
 
         // Open Driver Directory Button
         openDriverDirButton.addActionListener(e -> {
-            // Placeholder action: Show a message dialog
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
-                    "\"Open Driver Directory\" button clicked.\n(Actual directory opening to be implemented)",
-                    "Action", JOptionPane.INFORMATION_MESSAGE);
-            // Example for actual implementation (requires handling IOException and ensuring Desktop is supported):
-            // try {
-            //     File driverDir = new File("your/driver/directory/path");
-            //     if (Desktop.isDesktopSupported() && driverDir.exists() && driverDir.isDirectory()) {
-            //         Desktop.getDesktop().open(driverDir);
-            //     } else {
-            //         JOptionPane.showMessageDialog(this, "Could not open directory.", "Error", JOptionPane.ERROR_MESSAGE);
-            //     }
-            // } catch (IOException ex) {
-            //     ex.printStackTrace();
-            //     JOptionPane.showMessageDialog(this, "Error opening directory: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            // }
+            Application.openFileExplorer(MFS1.realPath(Application.storagePath + "/drivers"));
         });
 
         // Open Strategy Directory Button
         openStrategyDirButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
-                    "\"Open Strategy Directory\" button clicked.\n(Actual directory opening to be implemented)",
-                    "Action", JOptionPane.INFORMATION_MESSAGE);
+            Application.openFileExplorer(MFS1.realPath(Application.storagePath + "/strategies"));
         });
 
         // Refresh List Button
         refreshListButton.addActionListener(e -> {
-            // In a real application, you would re-fetch or update 'exchangesMap' here
-            // For now, we just re-populate the list from the existing map (which might not show changes unless map itself is updated)
-            // Example: exchangesMap.put("Newly Refreshed Exchange", new Object()); // Simulate data change
-            Application.currentInstance.reloadDrivers();
-            Application.currentInstance.reloadStrategies();
+            Application.currentInstance.loadDrivers();
+            Application.currentInstance.loadStrategies();
+            HashMap<String, TraderDriverManifestV1> drivers = Drivers.driversInstantiated;
+            exchangesMap.clear();
+            for (TraderDriverManifestV1 driverManifest : drivers.values()) {
+                exchangesMap.put(driverManifest.getDriverName(), driverManifest);
+            }
             populateExchangesList();
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
                     "List refreshed.", "Action", JOptionPane.INFORMATION_MESSAGE);
@@ -195,22 +181,16 @@ public class SettingsWindow extends KSGraphicalApplication implements KSApplicat
     }
 
     private void openExchangeDetailWindow(String exchangeName) {
-        // Create and display a new JFrame for the selected exchange's details/settings
-        JFrame detailFrame = new JFrame("Settings: " + exchangeName);
-        detailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Dispose this frame only
+        // Get driver manifest
+        TraderDriverManifestV1 manifest = exchangesMap.get(exchangeName);
 
         // Create content for the new frame
-        JPanel detailPanel = new JPanel(new BorderLayout());
-        detailPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JLabel contentLabel = new JLabel("Configuration options for \"" + exchangeName + "\" will appear here.");
-        contentLabel.setHorizontalAlignment(JLabel.CENTER);
-        detailPanel.add(contentLabel, BorderLayout.CENTER);
-        // You would add actual configuration components to detailPanel
-
-        detailFrame.setContentPane(detailPanel);
-        detailFrame.setMinimumSize(new Dimension(400, 300)); // Set a minimum size
-        detailFrame.pack(); // Size the frame to its content, respecting minimum size
-        detailFrame.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this)); // Position relative to Settings window
-        detailFrame.setVisible(true);
+        try {
+            EditDriverSettings settings = new EditDriverSettings(manifest);
+            settings.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Unable to open preference: " +  e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
