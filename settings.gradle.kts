@@ -33,3 +33,5 @@ include("_servers:ActivationServer")
 findProject(":_servers:ActivationServer")?.name = "ActivationServer"
 include("_services:ServicesControlService")
 findProject(":_services:ServicesControlService")?.name = "ServicesControlService"
+
+include("OtherApps:KSTraderSuiteInstaller")
