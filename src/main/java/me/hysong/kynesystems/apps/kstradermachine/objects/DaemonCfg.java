@@ -9,6 +9,8 @@ import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 import me.lks410.libhy2.jsoncoder.Codable;
 import me.lks410.libhy2.jsoncoder.JsonCodable;
 
+import java.util.HashMap;
+
 @Getter
 @Setter
 @Codable
@@ -24,6 +26,7 @@ public class DaemonCfg implements JsonCodable {
     private String orderMode;
     private transient boolean running;
     private boolean autoRun;
+    private HashMap<String, Object> settings;
 
     public boolean save() {
         SystemLogs.log("INFO", "Saving configurations...:" + this.toIndentedJsonString());
