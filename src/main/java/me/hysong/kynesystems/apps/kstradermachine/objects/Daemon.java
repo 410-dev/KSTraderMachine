@@ -15,7 +15,6 @@ import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 
 import javax.swing.*;
-import java.sql.Driver;
 
 @Getter
 public class Daemon {
@@ -59,7 +58,7 @@ public class Daemon {
                 if (strategyManifest.isForREST()) {
                     RESTStrategyV1 restStrat = strategyManifest.getRESTStrategy();
                     try {
-                        restStrat.start(account, cfg.getSymbol().split(","), driverManifest, driverManifest.getDriver());
+                        restStrat.loop(account, cfg.getSymbol().split(","), driverManifest, driverManifest.getDriver());
                         Thread.sleep((long) (restStrat.getPreferredLatency() * 1000));
                     } catch (InterruptedException e) {
                         SystemLogs.log("INFO", "REST Daemon " + cfg.getSlot() + " worker interrupted during sleep. Terminating.");
