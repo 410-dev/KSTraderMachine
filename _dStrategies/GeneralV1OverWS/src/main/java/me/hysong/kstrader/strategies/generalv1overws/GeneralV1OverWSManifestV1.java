@@ -2,8 +2,11 @@ package me.hysong.kstrader.strategies.generalv1overws;
 
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.strategy.RESTStrategyV1;
+import me.hysong.apis.kstrader.v1.strategy.StrategySettingsV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.WSStrategyV1;
+
+import java.util.HashMap;
 
 @Getter
 public class GeneralV1OverWSManifestV1 implements TraderStrategyManifestV1 {
@@ -21,6 +24,11 @@ public class GeneralV1OverWSManifestV1 implements TraderStrategyManifestV1 {
 
 
     @Override
+    public StrategySettingsV1 parseSettings(HashMap<String, Object> settings) {
+        return new GeneralV1OverWSSettings();
+    }
+
+    @Override
     public RESTStrategyV1 getRESTStrategy() {
         return null;
     }
@@ -29,4 +37,5 @@ public class GeneralV1OverWSManifestV1 implements TraderStrategyManifestV1 {
     public WSStrategyV1 getWSStrategy() {
         return new GeneralV1OverWSV1();
     }
+
 }
