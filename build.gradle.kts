@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":_sdk:KSTraderAPI"))
     implementation(project(":_sdk:Graphite"))
     implementation(project(":_sdk:KSSocket"))
+    implementation(project(":_sdk:KSSuite"))
     implementation(project(":_services:KSNotificationServer"))
 
     implementation(files("lib/JsonCoder.jar"))

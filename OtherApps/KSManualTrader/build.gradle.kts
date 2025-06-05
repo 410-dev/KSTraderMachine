@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":_sdk:Foundation"))
     implementation(project(":_sdk:liblks"))
     implementation(project(":_sdk:KSTraderAPI"))
+    implementation(project(":_sdk:KSSuite"))
     implementation(project(":_sdk:Graphite"))
 
     implementation(files("lib/JsonCoder.jar"))

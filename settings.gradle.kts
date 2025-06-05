@@ -36,3 +36,4 @@ findProject(":_services:ServicesControlService")?.name = "ServicesControlService
 
 include("OtherApps:KSTraderSuiteInstaller")
 include("_dStrategies:Cardano")
+include("_sdk:KSSuite")
