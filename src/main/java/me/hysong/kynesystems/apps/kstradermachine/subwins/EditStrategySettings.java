@@ -180,18 +180,18 @@ public class EditStrategySettings extends JFrame {
                         }
                     } else {
                         // Handle other types or throw an error
-                        JOptionPane.showMessageDialog(EditDriverSettings.this,
+                        JOptionPane.showMessageDialog(this,
                                 "Unsupported setting type for key: " + key,
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         return; // Stop processing and don't save
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(EditDriverSettings.this,
+                    JOptionPane.showMessageDialog(this,
                             "Invalid number format for key: " + key + "\nExpected type: " + type.getSimpleName(),
                             "Error", JOptionPane.ERROR_MESSAGE);
                     return; // Stop processing and don't save
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(EditDriverSettings.this,
+                    JOptionPane.showMessageDialog(this,
                             "Error parsing value for key: " + key + "\nError: " + ex.getMessage(),
                             "Error", JOptionPane.ERROR_MESSAGE);
                     return; // Stop processing and don't save
@@ -209,17 +209,17 @@ public class EditStrategySettings extends JFrame {
             }
 
             // Save the updated settings
-            boolean success = settings.save();
-            if (success) {
-                JOptionPane.showMessageDialog(EditDriverSettings.this,
-                        "Settings applied successfully!",
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Close the window after applying
-            } else {
-                JOptionPane.showMessageDialog(EditDriverSettings.this,
-                        "Failed to save settings.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+//            boolean success = settings.save();
+//            if (success) {
+//                JOptionPane.showMessageDialog(this,
+//                        "Settings applied successfully!",
+//                        "Success", JOptionPane.INFORMATION_MESSAGE);
+//                dispose(); // Close the window after applying
+//            } else {
+//                JOptionPane.showMessageDialog(this,
+//                        "Failed to save settings.",
+//                        "Error", JOptionPane.ERROR_MESSAGE);
+//            }
         });
         gbc.gridx = 0;
         gbc.gridy = currentGridY;
