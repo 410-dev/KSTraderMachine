@@ -25,7 +25,7 @@ public class GeneralV1OverWSManifestV1 implements TraderStrategyManifestV1 {
 
     @Override
     public StrategySettingsV1 parseSettings(HashMap<String, Object> settings) {
-        return new GeneralV1OverWSSettings();
+        return new GeneralV1OverWSSettings(settings);
     }
 
     @Override
