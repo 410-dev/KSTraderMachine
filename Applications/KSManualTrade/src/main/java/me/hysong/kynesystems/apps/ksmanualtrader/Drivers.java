@@ -3,6 +3,7 @@ package me.hysong.kynesystems.apps.ksmanualtrader;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
 import me.hysong.kynesystems.apps.ksmanualtrader.Application;
+import me.hysong.kynesystems.common.foundation.SystemLogs;
 
 import java.io.File;
 import java.io.IOException;

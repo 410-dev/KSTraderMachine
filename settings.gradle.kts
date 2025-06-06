@@ -1,4 +1,5 @@
 rootProject.name = "KSTraderMachine"
+
 include("_sdk:Foundation")
 findProject(":_sdk:Foundation")?.name = "Foundation"
 include("_sdk:Graphite")
@@ -7,6 +8,8 @@ include("_sdk:liblks")
 findProject(":_sdk:liblks")?.name = "liblks"
 include("_sdk:KSTraderAPI")
 findProject(":_sdk:KSTraderAPI")?.name = "KSTraderAPI"
+include("_sdk:KSSuite")
+findProject(":_sdk:KSSuite")?.name = "KSSuite"
 include("_drivers:UpBit")
 findProject(":_drivers:UpBit")?.name = "UpBit"
 include("strategies:GeneralV1")
@@ -17,8 +20,6 @@ include("_dStrategies:GeneralV1OverWS")
 findProject(":_dStrategies:GeneralV1OverWS")?.name = "GeneralV1OverWS"
 include("_drivers:Binance")
 findProject(":_drivers:Binance")?.name = "Binance"
-include("OtherApps:KSManualTrader")
-findProject(":OtherApps:KSManualTrader")?.name = "KSManualTrader"
 include("_services:KSNotificationServer")
 findProject(":_services:KSNotificationServer")?.name = "KSNotificationServer"
 include("_services:DiscordUIServer")
@@ -33,7 +34,7 @@ include("_servers:ActivationServer")
 findProject(":_servers:ActivationServer")?.name = "ActivationServer"
 include("_services:ServicesControlService")
 findProject(":_services:ServicesControlService")?.name = "ServicesControlService"
-
-include("OtherApps:KSTraderSuiteInstaller")
-include("_dStrategies:Cardano")
-include("_sdk:KSSuite")
+include("Applications:KSManualTrade")
+findProject(":Applications:KSManualTrade")?.name = "KSManualTrade"
+include("Applications:KSTraderSuiteInstaller")
+findProject(":Applications:KSTraderSuiteInstaller")?.name = "KSTraderSuiteInstaller"
