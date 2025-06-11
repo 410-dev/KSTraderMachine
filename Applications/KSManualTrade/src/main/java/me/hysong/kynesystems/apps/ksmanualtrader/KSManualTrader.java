@@ -11,8 +11,10 @@ import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
+import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.common.foundation.SystemLogs;
+import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,10 +37,53 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
     }
 
     @Override
-    public GPSplashWindow getSplashWindow() {
+    public GPSplashWindow getSplashWindow(String[] args) {
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
         splashWindow.setSplashBackend(new Thread(() -> {
-            StorageTool
+            // Setup storage path
+            storagePath = StorageSetupTool.init(args);
+
+            // Load libraries
+            try {
+                splashWindow.setCurrentStatus("Loading libraries...");
+                Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/libraries")));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(splashWindow, "Failed to load libraries", "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+            // Load languages
+            String[] nonDefaultLanguages = MFS1.listFiles(storagePath + "/languages", false);
+            String[] defaultLanguages = MFS1.listFiles(storagePath + "/defaults/languages", false);
+            for (String file : defaultLanguages) {
+                // Filter .lang.txt files only
+                if (!file.endsWith(".lang.txt")) continue;
+
+                // Load
+                try {
+                    LanguageKit.loadLanguageFromFile(storagePath + "/defaults/languages/" + file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            for (String file : nonDefaultLanguages) {
+                // Filter .lang.txt files only
+                if (!file.endsWith(".lang.txt")) continue;
+
+                // Load
+                try {
+                    LanguageKit.loadLanguageFromFile(storagePath + "/languages/" + file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Load drivers
+            loadDrivers();
+
+            // Load configurations
+
         }));
         JLabel titleLabel = new JLabel("Kyne Systems Trader Machine");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
