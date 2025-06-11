@@ -63,7 +63,7 @@ tasks.withType<Jar> {
         attributes(
             "Implementation-Title" to project.name,
             "Implementation-Version" to project.version,
-            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.Application"
+            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine"
         )
     }
 }
@@ -75,11 +75,11 @@ tasks.withType<ShadowJar> {
         attributes(
             "Implementation-Title" to project.name,
             "Implementation-Version" to project.version,
-            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.Application" // Crucial for executable JAR
+            "Main-Class" to "me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine" // Crucial for executable JAR
         )
     }
     // 2. Set target directory for the fat JAR:
-    archiveFileName.set("appbuild.jar")
+    archiveFileName.set("KSTraderMachine.appbuild.jar")
     archiveClassifier.set("")
     destinationDirectory.set(project.layout.projectDirectory.asFile)
 
@@ -109,8 +109,8 @@ tasks.withType<ShadowJar> {
 
 val copyDriver by tasks.registering(Copy::class) {
     group = "distribution"
-    description = "Copies the built appbuild.jar to the shared Storage directory"
-    from(layout.projectDirectory.file("appbuild.jar"))
+    description = "Copies the built KSTraderMachine.appbuild.jar to the shared Storage directory"
+    from(layout.projectDirectory.file("KSTraderMachine.appbuild.jar"))
     into(layout.projectDirectory.dir("Storage"))
     // if you want to overwrite
     duplicatesStrategy = DuplicatesStrategy.INCLUDE

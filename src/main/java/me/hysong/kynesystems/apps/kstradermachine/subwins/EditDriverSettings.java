@@ -4,17 +4,13 @@ import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystems.apps.kstradermachine.Application;
-import org.jetbrains.annotations.NotNull;
+import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class EditDriverSettings extends JFrame {
 
@@ -25,7 +21,7 @@ public class EditDriverSettings extends JFrame {
         this.manifest = manifest;
 
         // Get preferences
-        String prefLoc = MFS1.realPath(Application.storagePath + "/configs/drivers/" + manifest.getFileSystemIdentifier() + ".json");
+        String prefLoc = MFS1.realPath(KSTraderMachine.storagePath + "/configs/drivers/" + manifest.getFileSystemIdentifier() + ".json");
         TraderDriverSettingsV1 settings = manifest.getPreferenceObject(prefLoc);
 
         // Get language code

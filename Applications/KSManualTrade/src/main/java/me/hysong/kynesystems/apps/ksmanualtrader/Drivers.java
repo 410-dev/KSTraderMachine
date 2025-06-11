@@ -2,7 +2,6 @@ package me.hysong.kynesystems.apps.ksmanualtrader;
 
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
-import me.hysong.kynesystems.apps.ksmanualtrader.Application;
 import me.hysong.kynesystems.common.foundation.SystemLogs;
 
 import java.io.File;
@@ -20,7 +19,7 @@ import java.util.jar.JarFile;
 
 public class Drivers {
 
-    private static DriverLoader classLoader = new DriverLoader(new URL[]{}, Application.class.getClassLoader());
+    private static DriverLoader classLoader = new DriverLoader(new URL[]{}, KSManualTrader.class.getClassLoader());
     private static ArrayList<String> jarsLoaded = new ArrayList<>();
 
     public final static HashMap<String, Class<?>> drivers = new HashMap<>();
@@ -46,7 +45,7 @@ public class Drivers {
         URL jarUrl = jarFile.toURI().toURL();
 
         if (classLoader == null) {
-            classLoader = new DriverLoader(new URL[]{jarUrl}, Application.class.getClassLoader());
+            classLoader = new DriverLoader(new URL[]{jarUrl}, KSManualTrader.class.getClassLoader());
         } else {
             classLoader.addJar(jarUrl);
         }

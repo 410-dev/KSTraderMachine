@@ -8,7 +8,7 @@ import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystems.apps.kstradermachine.Application;
+import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
 import me.hysong.kynesystems.apps.kstradermachine.objects.DaemonCfg;
@@ -30,7 +30,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
     private final int windowHeight = 500;
 
     private int slot = -1;
-    private String cfgJsonPath = Application.storagePath + "/configs/daemons/undefined.json";
+    private String cfgJsonPath = KSTraderMachine.storagePath + "/configs/daemons/undefined.json";
     private DaemonCfg daemonCfg;
     private Daemon daemon;
 
@@ -88,7 +88,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         }
 
         slot = Integer.parseInt(slotArg.substring("slot=".length()));
-        cfgJsonPath = Application.storagePath + "/configs/daemons/" + slot + ".json";
+        cfgJsonPath = KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json";
         String content = MFS1.readString(cfgJsonPath);
         if (content == null) {
             JOptionPane.showMessageDialog(null, appDisplayName + " failed to open - Content is not valid", "Error", JOptionPane.ERROR_MESSAGE);
@@ -98,7 +98,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
         daemonCfg = new DaemonCfg();
         daemonCfg.fromJson(JsonParser.parseString(content).getAsJsonObject());
         daemonCfg.setSlot(slot);
-        daemon = Application.currentInstance.getDaemonMap().get(slot);
+        daemon = KSTraderMachine.currentInstance.getDaemonMap().get(slot);
 
         setLayout(new GridBagLayout()); // Main layout for the EditDaemon panel
         GridBagConstraints gbcMain = new GridBagConstraints(); // Constraints for main panel items
@@ -482,7 +482,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
                 JOptionPane.showMessageDialog(this, "Failed to save configuration.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            Application.currentInstance.getDaemonMap().get(slot).reloadPreference();
+            KSTraderMachine.currentInstance.getDaemonMap().get(slot).reloadPreference();
             dispose();
         });
 

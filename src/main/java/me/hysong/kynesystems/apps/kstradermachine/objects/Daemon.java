@@ -9,7 +9,7 @@ import me.hysong.apis.kstrader.v1.strategy.RESTStrategyV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.WSStrategyV1;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystems.apps.kstradermachine.Application;
+import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
@@ -41,7 +41,7 @@ public class Daemon {
                     break;
                 }
 
-                String preferenceFilePath = Application.storagePath + "/configs/drivers/" + driverManifest.getFileSystemIdentifier() + ".json";
+                String preferenceFilePath = KSTraderMachine.storagePath + "/configs/drivers/" + driverManifest.getFileSystemIdentifier() + ".json";
                 String preference = MFS1.readString(preferenceFilePath);
                 if (preference == null) {
                     SystemLogs.log("ERROR", "Driver configuration not found for slot " + cfg.getSlot() + " at " + preferenceFilePath + ". Please configure driver first. Terminating worker.");
@@ -107,7 +107,7 @@ public class Daemon {
                 // To avoid race conditions with terminate() updating the UI, be careful.
                 // A robust solution might involve a state machine or ensuring terminate() always finalizes the UI.
                 // For now, let terminate() be the main source of NOT_RUNNING status.
-                if (Application.currentInstance != null && Application.currentInstance.getDaemonStatusPanels().get(cfg.getSlot()) != null) {
+                if (KSTraderMachine.currentInstance != null && KSTraderMachine.currentInstance.getDaemonStatusPanels().get(cfg.getSlot()) != null) {
                     // If it stopped on its own due to error, reflect it.
                     // But only if not currently being terminated by terminate() method.
                     // This check can be complex. Let's assume terminate() or a new start() will fix UI.
@@ -175,30 +175,30 @@ public class Daemon {
         if (driverManifest == null || strategyManifest == null) {
             SystemLogs.log("ERROR", "Cannot start daemon for slot " + slot + ": Driver or Strategy is not configured/loaded.");
             // Update UI to show an error or not running state
-            if (Application.currentInstance != null && Application.currentInstance.getDaemonStatusPanels().get(slot) != null) {
-                SwingUtilities.invokeLater(() -> Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR)); // Or NOT_RUNNING
+            if (KSTraderMachine.currentInstance != null && KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot) != null) {
+                SwingUtilities.invokeLater(() -> KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR)); // Or NOT_RUNNING
             }
             return;
         }
 
         SystemLogs.log("INFO", "Starting worker for slot " + slot + "...");
         // UI updates should generally be on the EDT. Since start() is called from EDT (based on your exception), this is fine.
-        Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.STARTING_UP);
+        KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.STARTING_UP);
 
         this.terminateQueued = false; // Reset flag for the new run
         this.worker = new Thread(workerLogic, "DaemonWorker-Slot-" + slot); // Create a NEW Thread instance
 
         try {
             this.worker.start(); // Start the new thread
-            Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.OPERATING);
+            KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.OPERATING);
             SystemLogs.log("INFO", "Worker for slot " + slot + " started successfully.");
         } catch (IllegalThreadStateException itse) {
             // This should not happen with the new logic, but as a safeguard:
             SystemLogs.log("CRITICAL_ERROR", "IllegalThreadStateException during start for slot " + slot + ". This indicates a bug in daemon lifecycle management. " + itse.getMessage());
-            Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR);
+            KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR);
         } catch (Exception e) {
             SystemLogs.log("ERROR", "Failed to start worker thread for slot " + slot + ": " + e.toString());
-            Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR);
+            KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.ERROR);
         }
     }
 
@@ -206,16 +206,16 @@ public class Daemon {
         if (!isRunning() && !terminateQueued) { // If not running and not already in the process of terminating
             SystemLogs.log("INFO", "Worker for slot " + slot + " is not running or termination already handled.");
             // Ensure UI consistency
-            if (Application.currentInstance != null && Application.currentInstance.getDaemonStatusPanels().get(slot) != null) {
-                SwingUtilities.invokeLater(() -> Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING));
+            if (KSTraderMachine.currentInstance != null && KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot) != null) {
+                SwingUtilities.invokeLater(() -> KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING));
             }
             return;
         }
 
         if (terminateQueued && !isRunning()) { // Already signaled to terminate and thread is dead
             SystemLogs.log("INFO", "Worker for slot " + slot + " already terminated/terminating.");
-            if (Application.currentInstance != null && Application.currentInstance.getDaemonStatusPanels().get(slot) != null) {
-                SwingUtilities.invokeLater(() -> Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING));
+            if (KSTraderMachine.currentInstance != null && KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot) != null) {
+                SwingUtilities.invokeLater(() -> KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING));
             }
             return;
         }
@@ -259,8 +259,8 @@ public class Daemon {
 
             // UI updates from a non-EDT thread must use SwingUtilities.invokeLater
             SwingUtilities.invokeLater(() -> {
-                if (Application.currentInstance != null && Application.currentInstance.getDaemonStatusPanels().get(slot) != null) {
-                    Application.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
+                if (KSTraderMachine.currentInstance != null && KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot) != null) {
+                    KSTraderMachine.currentInstance.getDaemonStatusPanels().get(slot).setStatus(DaemonPanel.DaemonStatusOutlook.NOT_RUNNING);
                 }
             });
             SystemLogs.log("INFO", "Termination process for slot " + slot + " finalized.");

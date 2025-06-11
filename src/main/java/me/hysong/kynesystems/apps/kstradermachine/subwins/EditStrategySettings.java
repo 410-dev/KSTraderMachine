@@ -1,22 +1,14 @@
 package me.hysong.kynesystems.apps.kstradermachine.subwins;
 
-import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
-import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.apis.kstrader.v1.strategy.StrategySettingsV1;
 import me.hysong.atlas.utils.LanguageKit;
-import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystems.apps.kstradermachine.Application;
 import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class EditStrategySettings extends JFrame {
 

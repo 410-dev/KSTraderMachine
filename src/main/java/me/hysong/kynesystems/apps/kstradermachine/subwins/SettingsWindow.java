@@ -6,7 +6,7 @@ import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.MFS1;
-import me.hysong.kynesystems.apps.kstradermachine.Application;
+import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 
 import javax.swing.*;
@@ -143,18 +143,18 @@ public class SettingsWindow extends KSGraphicalApplication implements KSApplicat
 
         // Open Driver Directory Button
         openDriverDirButton.addActionListener(e -> {
-            Application.openFileExplorer(MFS1.realPath(Application.storagePath + "/drivers"));
+            KSTraderMachine.openFileExplorer(MFS1.realPath(KSTraderMachine.storagePath + "/drivers"));
         });
 
         // Open Strategy Directory Button
         openStrategyDirButton.addActionListener(e -> {
-            Application.openFileExplorer(MFS1.realPath(Application.storagePath + "/strategies"));
+            KSTraderMachine.openFileExplorer(MFS1.realPath(KSTraderMachine.storagePath + "/strategies"));
         });
 
         // Refresh List Button
         refreshListButton.addActionListener(e -> {
-            Application.currentInstance.loadDrivers();
-            Application.currentInstance.loadStrategies();
+            KSTraderMachine.currentInstance.loadDrivers();
+            KSTraderMachine.currentInstance.loadStrategies();
             HashMap<String, TraderDriverManifestV1> drivers = Drivers.driversInstantiated;
             exchangesMap.clear();
             for (TraderDriverManifestV1 driverManifest : drivers.values()) {
