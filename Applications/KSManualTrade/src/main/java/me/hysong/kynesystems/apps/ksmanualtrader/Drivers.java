@@ -23,7 +23,7 @@ public class Drivers {
     private static ArrayList<String> jarsLoaded = new ArrayList<>();
 
     public final static HashMap<String, Class<?>> drivers = new HashMap<>();
-    public final static HashMap<String, TraderDriverManifestV1> driversInstantiated = new HashMap<>(); // Key:
+    public final static HashMap<String, TraderDriverManifestV1> driversInstantiated = new HashMap<>(); // Key: Class full name
     public final static HashMap<String, Class<?>> strategies = new HashMap<>();
     public final static HashMap<String, TraderStrategyManifestV1> strategiesInstantiated = new HashMap<>();
 

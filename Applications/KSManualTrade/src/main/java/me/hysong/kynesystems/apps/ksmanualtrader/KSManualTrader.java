@@ -17,9 +17,11 @@ import me.hysong.kynesystems.common.foundation.SystemLogs;
 import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @Getter
@@ -30,6 +32,127 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
     private final int windowHeight = 600;
 
     private String storagePath = "Storage";
+
+
+
+    // --- Global Component Declarations ---
+
+    // Top Panel Components
+    private JPanel topPanel;
+    private JButton refreshButton;
+    private JComboBox<String> exchangeComboBox;
+
+    // Main content panel that holds all sections
+    private JPanel mainContentPanel;
+
+    // General Section Components
+    private JPanel generalPanel;
+    private JButton generalSettingsButton;
+    private JButton logsButton;
+
+    // Orders Section Components
+    private JPanel ordersPanel;
+    private JButton makeOrderButton;
+    private JButton currentOrdersButton1;
+    private JButton currentOrdersButton2; // As per the image, there are two buttons with similar text
+
+    // History Section Components
+    private JPanel historyPanel;
+    private JButton historySettingsButton;
+    private JButton historyButton;
+
+    // Bottom Panel Components
+    private JLabel versionLabel;
+    private JLabel connectionLabel;
+
+    // Static data
+    public static final String appDataPath = "/apps/KSManualTrade/"; // Append after storage path
+    public static final String logsPath = appDataPath + "logs";
+    public static final String cfgPath = appDataPath + "configs";
+
+    /**
+     * Initializes all the Swing components.
+     */
+    private void initComponents() {
+        // Top Panel
+        refreshButton = new JButton("Refresh");
+//        String[] exchanges = {"UpBit", "Binance", "Coinbase"};
+
+        // Make combo box from drivers
+        String[] exchanges = new String[Drivers.driversInstantiated.size()];
+        int index = 0;
+        for (String driverId : Drivers.driversInstantiated.keySet()) {
+            String exchangeName = Drivers.driversInstantiated.get(driverId).getDriverExchangeName() + ": " + Drivers.driversInstantiated.get(driverId).getDriverExchange();
+            exchanges[index] = exchangeName;
+            index += 1;
+        }
+        exchangeComboBox = new JComboBox<>(exchanges);
+
+
+        // General Section
+        generalSettingsButton = new JButton("Settings");
+        logsButton = new JButton("Logs");
+
+        // Orders Section
+        makeOrderButton = new JButton("Make Order");
+        currentOrdersButton1 = new JButton("Current Orders");
+        currentOrdersButton2 = new JButton("Current Orders");
+
+        // History Section
+        historySettingsButton = new JButton("Settings");
+        historyButton = new JButton("History");
+
+        // Bottom Panel
+        versionLabel = new JLabel("Version 1.0");
+        connectionLabel = new JLabel("Not connected");
+    }
+
+    /**
+     * Lays out all the initialized components within various panels.
+     */
+    private void layoutComponents() {
+        // --- Top Panel Construction ---
+        topPanel = new JPanel(new BorderLayout(5, 5));
+        topPanel.add(refreshButton, BorderLayout.WEST);
+        topPanel.add(exchangeComboBox, BorderLayout.CENTER);
+        add(topPanel, BorderLayout.NORTH); // Add top panel to the frame
+
+        // --- Main Content Panel Construction (for sections) ---
+        mainContentPanel = new JPanel();
+        mainContentPanel.setLayout(new BoxLayout(mainContentPanel, BoxLayout.Y_AXIS));
+
+        // --- General Panel ---
+        generalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        generalPanel.setBorder(new TitledBorder("General"));
+        generalPanel.add(generalSettingsButton);
+        generalPanel.add(logsButton);
+        mainContentPanel.add(generalPanel);
+
+        // --- Orders Panel ---
+        ordersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        ordersPanel.setBorder(new TitledBorder("Orders"));
+        ordersPanel.add(makeOrderButton);
+        ordersPanel.add(currentOrdersButton1);
+        ordersPanel.add(currentOrdersButton2);
+        mainContentPanel.add(ordersPanel);
+
+        // --- History Panel ---
+        historyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        historyPanel.setBorder(new TitledBorder("History"));
+        historyPanel.add(historySettingsButton);
+        historyPanel.add(historyButton);
+        mainContentPanel.add(historyPanel);
+
+        // Add the central container panel to the frame's center
+        add(mainContentPanel, BorderLayout.CENTER);
+
+        // --- Bottom Panel (Version Label) ---
+        // We wrap the label in a panel to provide some padding
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.add(versionLabel);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
 
     @Override
     public int appMain(KSEnvironment environment, String execLocation, String[] args) {
@@ -67,6 +190,11 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
                     e.printStackTrace();
                 }
             }
+
+//            Arrays.stream(nonDefaultLanguages).map(e -> {
+//                
+//            });
+
             for (String file : nonDefaultLanguages) {
                 // Filter .lang.txt files only
                 if (!file.endsWith(".lang.txt")) continue;
@@ -82,7 +210,25 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
             // Load drivers
             loadDrivers();
 
-            // Load configurations
+            // TODO Load configurations
+            // ldcfg
+
+            // Prepare UI
+            // --- Frame Setup ---
+//        super("KSManualTrader"); // Set window title
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLayout(new BorderLayout(10, 10)); // Main layout with gaps
+
+            // --- Initialize Components ---
+            initComponents();
+
+            // --- Layout Panels ---
+            layoutComponents();
+
+            // --- Finalize Frame ---
+//        pack(); // Adjust window size to fit all components
+//        setLocationRelativeTo(null); // Center the window on the screen
+            setMinimumSize(getSize()); // Prevent resizing smaller than the packed size
 
         }));
         JLabel titleLabel = new JLabel("Kyne Systems Trader Machine");
