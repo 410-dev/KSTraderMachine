@@ -13,15 +13,17 @@ import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.atlas.utils.MFS1;
+import me.hysong.kynesystems.apps.ksmanualtrader.windows.EditDriverSettings;
 import me.hysong.kynesystems.common.foundation.SystemLogs;
 import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 @Getter
@@ -31,7 +33,7 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
     private final int windowWidth = 800;
     private final int windowHeight = 600;
 
-    private String storagePath = "Storage";
+    public static String storagePath = "Storage";
 
 
 
@@ -82,7 +84,7 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
         String[] exchanges = new String[Drivers.driversInstantiated.size()];
         int index = 0;
         for (String driverId : Drivers.driversInstantiated.keySet()) {
-            String exchangeName = Drivers.driversInstantiated.get(driverId).getDriverExchangeName() + ": " + Drivers.driversInstantiated.get(driverId).getDriverExchange();
+            String exchangeName = Drivers.driversInstantiated.get(driverId).getDriverExchangeName() + ": " + Drivers.driversInstantiated.get(driverId).getDriverExchange() + " (" + driverId + ")";
             exchanges[index] = exchangeName;
             index += 1;
         }
@@ -105,6 +107,28 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
         // Bottom Panel
         versionLabel = new JLabel("Version 1.0");
         connectionLabel = new JLabel("Not connected");
+
+        // Button actions
+        generalSettingsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String id = null;
+                if (exchangeComboBox.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(null, "Unable to open setting: ID is not selected.", "ID not selected", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                id = exchangeComboBox.getSelectedItem().toString();
+                String[] comp = id.split(" \\(");
+                if (comp.length < 2) {
+                    JOptionPane.showMessageDialog(null, "Unable to retrieve driver ID from selection.", "Internal Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                id = comp[comp.length - 1];
+                id = id.substring(0, id.length() - 1); // This is key of drivers instantiated
+
+                new EditDriverSettings(Drivers.driversInstantiated.get(id)).setVisible(true);
+            }
+        });
     }
 
     /**
@@ -190,10 +214,6 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
                     e.printStackTrace();
                 }
             }
-
-//            Arrays.stream(nonDefaultLanguages).map(e -> {
-//                
-//            });
 
             for (String file : nonDefaultLanguages) {
                 // Filter .lang.txt files only

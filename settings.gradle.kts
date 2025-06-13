@@ -38,3 +38,5 @@ include("Applications:KSManualTrade")
 findProject(":Applications:KSManualTrade")?.name = "KSManualTrade"
 include("Applications:KSTraderSuiteInstaller")
 findProject(":Applications:KSTraderSuiteInstaller")?.name = "KSTraderSuiteInstaller"
+
+include("_services:DriversHostServer")

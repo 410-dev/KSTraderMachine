@@ -28,7 +28,6 @@ public abstract class TraderDriverSettingsV1 {
 
     public void compose() {
         // Read the JSON file
-        this.driverCfgPath = driverCfgPath;
         StringBuilder jsonContent = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(driverCfgPath));
@@ -155,6 +154,19 @@ public abstract class TraderDriverSettingsV1 {
             }
         }
         jsonObject.add("settings", settings);
+
+        try {
+            // Create directory if not exist
+            File f = new File(driverCfgPath);
+            if (!f.getParentFile().isDirectory()) {
+                f.getParentFile().mkdirs();
+            }
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.err.println("Failed to create parent directory for the JSON file: " + driverCfgPath);
+            return false;
+        }
+
         // Write the JSON object to a file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(driverCfgPath))) {
             writer.write(jsonObject.toString());
