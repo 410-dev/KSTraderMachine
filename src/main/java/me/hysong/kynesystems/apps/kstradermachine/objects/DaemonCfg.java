@@ -1,6 +1,7 @@
 package me.hysong.kynesystems.apps.kstradermachine.objects;
 
 import com.google.gson.JsonParser;
+import liblks.files.File2;
 import lombok.Getter;
 import lombok.Setter;
 import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
@@ -29,11 +30,22 @@ public class DaemonCfg implements JsonCodable {
 
     public boolean save() {
         SystemLogs.log("INFO", "Saving configurations...:" + this.toIndentedJsonString());
-        return MFS1.write(KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json", this.toIndentedJsonString());
+        try {
+            new File2(KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json").writeString(this.toIndentedJsonString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void reload() {
-        String content = MFS1.readString(KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json");
+        String content = null;
+        try {
+            content = new File2(KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json").readStringNullable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (content == null) {
             SystemLogs.log("WARNING", "Content is empty.");
             return;
