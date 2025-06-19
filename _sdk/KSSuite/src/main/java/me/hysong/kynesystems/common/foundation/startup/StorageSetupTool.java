@@ -29,8 +29,8 @@ public class StorageSetupTool {
      * @param args Command-line arguments. Looks for "--reset-storage" to force re-initialization.
      * @return The verified path to the storage root.
      */
-    public static String init(String[] args) {
-        String pathCheckResult = pathCheck(args);
+    public static String init(String scope, String[] args) {
+        String pathCheckResult = pathCheck(scope, args);
 
         // The first character from pathCheck indicates if storage is initialized ('t' or 'f').
         boolean isInitialized = pathCheckResult.toLowerCase().startsWith("t");
@@ -45,7 +45,7 @@ public class StorageSetupTool {
             System.out.println("Initializing or resetting storage at: " + storagePath);
 
             // Copy the default directory structure from the VFS image to the real disk.
-            VFS3 vfs = new VFS3("struct.img.vfs3");
+            VFS3 vfs = new VFS3(scope + ".img.vfs3");
             vfs.imageToRealDisk(new File(storagePath));
 
             // Create the content for the config file, marking it as initialized.
@@ -66,16 +66,17 @@ public class StorageSetupTool {
      * @return A string where the first character is a flag ('t' for initialized, 'f' for not)
      * and the rest of the string is the path to the storage root.
      */
-    private static String pathCheck(String[] args) {
+    private static String pathCheck(String scope, String[] args) {
         // Determine the root path for storage from arguments, or use "Storage" as a default.
         String rootPath = Arrays.stream(args)
                 .filter(e -> e.startsWith("--root="))
                 .map(s -> s.substring("--root=".length()))
                 .findFirst()
                 .orElse("Storage");
+        rootPath += File.separator + "containers" + File.separator + scope;
 
         // Create the storage directory if it doesn't already exist.
-        if (!MFS1.isDirectory(rootPath) && !MFS1.mkdir(rootPath)) {
+        if (!MFS1.isDirectory(rootPath) && !MFS1.mkdirs(rootPath)) {
             // If creation fails, throw a descriptive error.
             throw new RuntimeException("Unable to create storage directory at: " + rootPath);
         }

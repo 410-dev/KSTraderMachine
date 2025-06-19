@@ -188,7 +188,7 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
         splashWindow.setSplashBackend(new Thread(() -> {
             // Setup storage path
-            storagePath = StorageSetupTool.init(args);
+            storagePath = StorageSetupTool.init("KSManualTrader", args);
 
             // Load libraries
             try {

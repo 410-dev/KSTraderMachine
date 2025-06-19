@@ -159,7 +159,7 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
         GPSplashWindow splashWindow = new GPSplashWindow(400, 300, JLabel.RIGHT);
         splashWindow.setSplashBackend(new Thread(() -> {
             // Locate storage path
-            storagePath = StorageSetupTool.init(args);
+            storagePath = StorageSetupTool.init("KSTraderMachine", args);
 
             // TODO Check activation
 //            boolean activated = LicenseSetupTool.isLicensed(splashWindow, storagePath);
