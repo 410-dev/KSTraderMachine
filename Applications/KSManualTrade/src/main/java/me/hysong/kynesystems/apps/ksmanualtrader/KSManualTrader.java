@@ -1,18 +1,13 @@
 package me.hysong.kynesystems.apps.ksmanualtrader;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
-import me.hysong.atlas.application.ApplicationStorage;
-import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.GPSplashWindow;
 import me.hysong.atlas.sdk.graphite.v1.GraphiteProgramLauncher;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.LanguageKit;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.ksmanualtrader.windows.EditDriverSettings;
 import me.hysong.kynesystems.common.foundation.SystemLogs;
 import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;

@@ -3,7 +3,6 @@ package me.hysong.kynesystems.apps.kstradermachine.subwins;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.atlas.utils.LanguageKit;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 
 import javax.swing.*;

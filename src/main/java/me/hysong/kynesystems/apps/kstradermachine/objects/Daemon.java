@@ -2,13 +2,13 @@ package me.hysong.kynesystems.apps.kstradermachine.objects;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import liblks.files.File2;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.objects.Account;
 import me.hysong.apis.kstrader.v1.strategy.RESTStrategyV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.WSStrategyV1;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
@@ -42,7 +42,7 @@ public class Daemon {
                 }
 
                 String preferenceFilePath = KSTraderMachine.storagePath + "/configs/drivers/" + driverManifest.getFileSystemIdentifier() + ".json";
-                String preference = MFS1.readString(preferenceFilePath);
+                String preference = new File2(preferenceFilePath).readStringNullable();
                 if (preference == null) {
                     SystemLogs.log("ERROR", "Driver configuration not found for slot " + cfg.getSlot() + " at " + preferenceFilePath + ". Please configure driver first. Terminating worker.");
                     // Update UI to show an error state for this daemon might be good here if possible

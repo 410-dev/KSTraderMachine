@@ -1,8 +1,8 @@
 package me.hysong.atlas.application;
 
+import liblks.files.File2;
 import me.hysong.atlas.interfaces.KSDeepSystemCommunicator;
 import me.hysong.atlas.utils.KSHostTool;
-import me.hysong.atlas.utils.MFS1;
 
 public class ApplicationStorage {
 
@@ -10,6 +10,6 @@ public class ApplicationStorage {
     public static KSDeepSystemCommunicator dsc = KSHostTool.getSystemCommunicator();
 
     public static boolean mkdirs(String virtualPath) {
-        return MFS1.mkdirs(dsc.getApplicationDataPath() + "/" + appName + "/" + virtualPath);
+        return new File2(dsc.getApplicationDataPath() + "/" + appName + "/" + virtualPath).mkdirs();
     }
 }

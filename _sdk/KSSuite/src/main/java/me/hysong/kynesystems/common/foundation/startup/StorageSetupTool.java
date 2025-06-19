@@ -1,7 +1,7 @@
 package me.hysong.kynesystems.common.foundation.startup;
 
+import liblks.files.File2;
 import me.hysong.atlas.async.SimplePromise;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.atlas.utils.vfs.v3.VFS3;
 
 import javax.swing.*;
@@ -53,7 +53,11 @@ public class StorageSetupTool {
             // '1' is used for true, '0' for false.
             String initializedContent = "version=int32:1\n" +
                     "initialized=int1:1";
-            MFS1.write(storagePath + File.separator + STORAGE_CONFIG_FILENAME, initializedContent);
+            try {
+                new File2(storagePath + File.separator + STORAGE_CONFIG_FILENAME).writeString(initializedContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return storagePath;
@@ -76,14 +80,16 @@ public class StorageSetupTool {
         rootPath += File.separator + "containers" + File.separator + scope;
 
         // Create the storage directory if it doesn't already exist.
-        if (!MFS1.isDirectory(rootPath) && !MFS1.mkdirs(rootPath)) {
+        File2 rootDirectory = new File2(rootPath);
+        if (!rootDirectory.isDirectory() && !rootDirectory.mkdirs()) {
             // If creation fails, throw a descriptive error.
             throw new RuntimeException("Unable to create storage directory at: " + rootPath);
         }
 
         // Define the full path to the configuration file.
         String configFilePath = rootPath + File.separator + STORAGE_CONFIG_FILENAME;
-        String storageConfigContent = MFS1.readString(configFilePath);
+        File2 configFile = new File2(configFilePath);
+        String storageConfigContent = configFile.readStringNullable();
 
         // If the config file doesn't exist or is empty, create a default version.
         if (storageConfigContent == null || storageConfigContent.trim().isEmpty()) {
@@ -91,7 +97,11 @@ public class StorageSetupTool {
             // Default to uninitialized state.
             String defaultConfig = "version=int32:1\n" +
                     "initialized=int1:0"; // 0 for false
-            MFS1.write(configFilePath, defaultConfig);
+            try {
+                configFile.writeString(defaultConfig);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             storageConfigContent = defaultConfig;
         }
 

@@ -4,7 +4,6 @@ package me.hysong.kynesystems.apps.ksmanualtrader.windows;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.atlas.utils.LanguageKit;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.ksmanualtrader.KSManualTrader;
 
 import javax.swing.*;

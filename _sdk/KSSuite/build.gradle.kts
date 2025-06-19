@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     implementation(project(":_sdk:Foundation"))
+    implementation(project(":_sdk:liblks"))
 
     // Lombok, used only during compile time
     compileOnly("org.projectlombok:lombok:1.18.36")

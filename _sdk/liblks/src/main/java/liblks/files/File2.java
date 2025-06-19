@@ -81,6 +81,11 @@ public class File2 extends File {
         writeString(createParentDirectory, content, false);
     }
 
+    public void writeString(String content) throws IOException {
+        writeString(false, content, false);
+    }
+
+
     public String readString() throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(this));
         StringBuilder sb = new StringBuilder();
@@ -91,5 +96,13 @@ public class File2 extends File {
         }
         br.close();
         return sb.toString();
+    }
+
+    public String readStringNullable() {
+        try {
+            return readString();
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package me.hysong.atlas.utils;
 
+import liblks.files.File2;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,7 +15,9 @@ public class LanguageKit {
     }
 
     public static boolean loadLanguageFromFile(String filePath) {
-        String content = MFS1.readString(MFS1.virtualPath(filePath));
+//        String content = MFS1.readString(MFS1.virtualPath(filePath));
+        File2 contentFile = new File2(filePath);
+        String content = contentFile.readStringNullable();
         if (content == null) {
             throw new RuntimeException("Unable to load language file: " + filePath);
         }

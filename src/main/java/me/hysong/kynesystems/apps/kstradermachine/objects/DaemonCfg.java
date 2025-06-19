@@ -3,7 +3,6 @@ package me.hysong.kynesystems.apps.kstradermachine.objects;
 import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.Setter;
-import me.hysong.atlas.utils.MFS1;
 import me.hysong.kynesystems.apps.kstradermachine.KSTraderMachine;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.SystemLogs;
 import me.lks410.libhy2.jsoncoder.Codable;
