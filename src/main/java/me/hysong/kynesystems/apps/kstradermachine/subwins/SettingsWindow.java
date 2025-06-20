@@ -1,5 +1,6 @@
 package me.hysong.kynesystems.apps.kstradermachine.subwins; // Or your desired package
 
+import liblks.files.File2;
 import lombok.Getter; // Assuming you use Lombok
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.atlas.interfaces.KSApplication;
@@ -142,12 +143,12 @@ public class SettingsWindow extends KSGraphicalApplication implements KSApplicat
 
         // Open Driver Directory Button
         openDriverDirButton.addActionListener(e -> {
-            KSTraderMachine.openFileExplorer(MFS1.realPath(KSTraderMachine.storagePath + "/drivers"));
+            KSTraderMachine.openFileExplorer(new File2(KSTraderMachine.storagePath + "/drivers").getAbsolutePath());
         });
 
         // Open Strategy Directory Button
         openStrategyDirButton.addActionListener(e -> {
-            KSTraderMachine.openFileExplorer(MFS1.realPath(KSTraderMachine.storagePath + "/strategies"));
+            KSTraderMachine.openFileExplorer(new File2(KSTraderMachine.storagePath + "/strategies").getAbsolutePath());
         });
 
         // Refresh List Button

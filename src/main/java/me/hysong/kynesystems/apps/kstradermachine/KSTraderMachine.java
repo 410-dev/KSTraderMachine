@@ -1,5 +1,6 @@
 package me.hysong.kynesystems.apps.kstradermachine;
 
+import liblks.files.File2;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
@@ -87,7 +88,7 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
 
         // Load drivers
         try {
-            Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/drivers")));
+            Drivers.loadJarsIn(new File2(storagePath + "/drivers"));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Failed to load drivers", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -122,7 +123,7 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
     public void loadStrategies() {
         // Load strategies
         try {
-            Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/strategies")));
+            Drivers.loadJarsIn(new File2(storagePath + "/strategies"));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Failed to load strategies", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -177,7 +178,7 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
             // Load libraries
             try {
                 splashWindow.setCurrentStatus("Loading libraries...");
-                Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/libraries")));
+                Drivers.loadJarsIn(new File2(storagePath + "/libraries"));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(splashWindow, "Failed to load libraries", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
@@ -185,8 +186,8 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
             }
 
             // Load languages
-            String[] nonDefaultLanguages = MFS1.listFiles(storagePath + "/languages", false);
-            String[] defaultLanguages = MFS1.listFiles(storagePath + "/defaults/languages", false);
+            String[] nonDefaultLanguages = new File2(storagePath + "/languages").childrenRecursive(true).toArray(new String[0]);
+            String[] defaultLanguages = new File2(storagePath + "/defaults/languages").childrenRecursive(true).toArray(new String[0]);
             for (String file : defaultLanguages) {
                 // Filter .lang.txt files only
                 if (!file.endsWith(".lang.txt")) continue;
@@ -240,7 +241,7 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
             // Load daemons
             try {
                 splashWindow.setCurrentStatus("Loading configurations...");
-                String[] flist = MFS1.listFiles(storagePath + "/configs/daemons", false);
+                String[] flist = new File2(storagePath + "/configs/daemons").childrenFiles().toArray(new String[0]);
                 for (String fileName : flist) {
                     if (!fileName.endsWith(".json")) {
                         continue;
@@ -437,11 +438,10 @@ public class KSTraderMachine extends KSGraphicalApplication implements KSApplica
     }
 
     public static void openFileExplorer(String path) {
-        File file = new File(path);
+        File2 file = new File2(path);
 
         if (!file.exists()) {
-            System.err.println("Path does not exist: " + path);
-            return;
+            file.mkdirs();
         }
 
         try {

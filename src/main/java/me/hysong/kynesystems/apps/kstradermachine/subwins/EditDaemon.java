@@ -1,6 +1,7 @@
 package me.hysong.kynesystems.apps.kstradermachine.subwins;
 
 import com.google.gson.JsonParser;
+import liblks.files.File2;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.strategy.TraderStrategyManifestV1;
@@ -88,7 +89,7 @@ public class EditDaemon extends KSGraphicalApplication implements KSApplication 
 
         slot = Integer.parseInt(slotArg.substring("slot=".length()));
         cfgJsonPath = KSTraderMachine.storagePath + "/configs/daemons/" + slot + ".json";
-        String content = MFS1.readString(cfgJsonPath);
+        String content = new File2(cfgJsonPath).readStringNullable();
         if (content == null) {
             JOptionPane.showMessageDialog(null, appDisplayName + " failed to open - Content is not valid", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
