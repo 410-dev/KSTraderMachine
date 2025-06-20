@@ -67,7 +67,7 @@ val copyDriver by tasks.registering(Copy::class) {
     group = "distribution"
     description = "Copies the built Graphite.jar to the shared Storage/libraries directory"
     from(layout.buildDirectory.file("../../../builds/libraries/Graphite.jar"))
-    into(layout.projectDirectory.dir("../../Storage/libraries"))
+    into(layout.projectDirectory.dir("../../Storage/defaults_shared/libraries"))
     // if you want to overwrite
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
