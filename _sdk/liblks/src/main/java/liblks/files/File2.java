@@ -49,6 +49,33 @@ public class File2 extends File {
         return files;
     }
 
+    public ArrayList<String> childrenRecursive(boolean excludeDirectory, int depth, int currentDepth) {
+
+        ArrayList<String> files = new ArrayList<>();
+
+        if (depth >= 0 && depth >= currentDepth) {
+            return files;
+        }
+
+        ArrayList<String> content = children();
+        for (String path : content) {
+            File2 target = child(path);
+            if (target.isDirectory()) {
+                files.addAll(target.childrenRecursive(excludeDirectory, depth, currentDepth + 1));
+                if (!excludeDirectory) {
+                    files.add(path);
+                }
+            } else {
+                files.add(path);
+            }
+        }
+        return files;
+    }
+
+    public ArrayList<String> childrenRecursive(boolean excludeDirectory) {
+        return childrenRecursive(excludeDirectory, -1, 0);
+    }
+
     public ArrayList<String> childrenFiles() {
         ArrayList<String> result = children();
         result.removeIf(s -> new File(s).isDirectory());
