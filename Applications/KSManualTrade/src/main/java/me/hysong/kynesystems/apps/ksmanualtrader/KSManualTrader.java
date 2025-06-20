@@ -1,5 +1,6 @@
 package me.hysong.kynesystems.apps.ksmanualtrader;
 
+import liblks.files.File2;
 import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.atlas.interfaces.KSApplication;
@@ -188,7 +189,7 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
             // Load libraries
             try {
                 splashWindow.setCurrentStatus("Loading libraries...");
-                Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/libraries")));
+                Drivers.loadJarsIn(new File2(storagePath + "/libraries"));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(splashWindow, "Failed to load libraries", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
@@ -196,8 +197,8 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
             }
 
             // Load languages
-            String[] nonDefaultLanguages = MFS1.listFiles(storagePath + "/languages", false);
-            String[] defaultLanguages = MFS1.listFiles(storagePath + "/defaults/languages", false);
+            String[] nonDefaultLanguages = new File2(storagePath + "/languages").childrenRecursive(true).toArray(new String[0]);
+            String[] defaultLanguages = new File2(storagePath + "/defaults/languages").childrenRecursive(true).toArray(new String[0]);
             for (String file : defaultLanguages) {
                 // Filter .lang.txt files only
                 if (!file.endsWith(".lang.txt")) continue;
@@ -266,7 +267,7 @@ public class KSManualTrader extends KSGraphicalApplication implements KSApplicat
 
         // Load drivers
         try {
-            Drivers.loadJarsIn(new File(MFS1.realPath(storagePath + "/drivers")));
+            Drivers.loadJarsIn(new File2(storagePath + "/drivers"));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Failed to load drivers", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();

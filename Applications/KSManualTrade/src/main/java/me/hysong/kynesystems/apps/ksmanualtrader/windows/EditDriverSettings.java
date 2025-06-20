@@ -1,6 +1,7 @@
 package me.hysong.kynesystems.apps.ksmanualtrader.windows;
 
 
+import liblks.files.File2;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverSettingsV1;
 import me.hysong.atlas.utils.LanguageKit;
@@ -21,7 +22,7 @@ public class EditDriverSettings extends JFrame {
         this.manifest = manifest;
 
         // Get preferences
-        String prefLoc = MFS1.realPath(KSManualTrader.storagePath + KSManualTrader.appDataPath + "/configs/drivers/" + manifest.getFileSystemIdentifier() + ".json");
+        String prefLoc = new File2(KSManualTrader.storagePath + KSManualTrader.appDataPath + "/configs/drivers/" + manifest.getFileSystemIdentifier() + ".json").getAbsolutePath();
         TraderDriverSettingsV1 settings = manifest.getPreferenceObject(prefLoc);
 
         // Get language code
