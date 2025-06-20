@@ -4,8 +4,6 @@ import liblks.files.File2;
 import me.hysong.atlas.utils.vfs.v3.VFS3;
 import me.hysong.atlas.utils.vfs.v3.VFS3HeaderComposition;
 
-import java.io.File;
-
 public class MakeImage {
     public static void main(String[] args) {
         File2 f = new File2("Storage/defaults/");

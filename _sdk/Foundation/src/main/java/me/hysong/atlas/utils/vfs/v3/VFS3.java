@@ -1,22 +1,16 @@
 package me.hysong.atlas.utils.vfs.v3;
 
 
-import me.hysong.atlas.async.Promise;
-
-import java.io.File;
-import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class VFS3 implements Serializable {

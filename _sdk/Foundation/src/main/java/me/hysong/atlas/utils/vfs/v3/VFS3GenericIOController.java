@@ -1,7 +1,5 @@
 package me.hysong.atlas.utils.vfs.v3;
 
-import java.io.Serializable; // Required as VFS3IOProcessor extends Serializable
-
 // Assuming VFS3HeaderComposition and VFS3IOProcessor are in the same package or imported.
 
 public class VFS3GenericIOController implements VFS3IOProcessor {

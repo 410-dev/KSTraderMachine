@@ -13,17 +13,16 @@ import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.LanguageKit;
 import me.hysong.kynesystem.services.notification.NotificationObject;
 import me.hysong.kynesystems.apps.kstradermachine.backend.Drivers;
-import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;
 import me.hysong.kynesystems.apps.kstradermachine.front.uiobjects.DaemonPanel;
 import me.hysong.kynesystems.apps.kstradermachine.objects.Daemon;
 import me.hysong.kynesystems.apps.kstradermachine.objects.DaemonCfg;
 import me.hysong.kynesystems.apps.kstradermachine.subwins.*;
+import me.hysong.kynesystems.common.foundation.startup.StorageSetupTool;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 

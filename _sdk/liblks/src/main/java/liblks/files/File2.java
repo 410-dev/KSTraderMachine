@@ -2,7 +2,6 @@ package liblks.files;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class File2 extends File {
 

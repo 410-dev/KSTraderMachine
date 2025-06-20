@@ -1,7 +1,6 @@
 package me.hysong.apis.kstrader.v1.strategy;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public interface TraderStrategyManifestV1 {
 

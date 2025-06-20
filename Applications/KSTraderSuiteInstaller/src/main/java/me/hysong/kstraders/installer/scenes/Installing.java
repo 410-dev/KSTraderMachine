@@ -2,8 +2,6 @@ package me.hysong.kstraders.installer.scenes;
 
 import me.hysong.kstraders.installer.InstallerScene;
 
-import javax.print.attribute.standard.RequestingUserName;
-
 public class Installing extends InstallerScene {
 
     private boolean success = false;

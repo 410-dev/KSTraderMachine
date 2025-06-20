@@ -2,7 +2,6 @@ package me.hysong.apis.kstrader.v1.objects;
 
 import liblks.security.CoreSHA;
 import lombok.Getter;
-import me.hysong.atlas.utils.SIDKit;
 
 import java.util.ArrayList;
 import java.util.HashMap;

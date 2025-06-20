@@ -1,7 +1,7 @@
 package me.hysong.kynesystems.apps.kstradermachine.subwins; // Or your desired package
 
 import liblks.files.File2;
-import lombok.Getter; // Assuming you use Lombok
+import lombok.Getter;
 import me.hysong.apis.kstrader.v1.driver.TraderDriverManifestV1;
 import me.hysong.atlas.interfaces.KSApplication;
 import me.hysong.atlas.sdk.graphite.v1.KSGraphicalApplication;

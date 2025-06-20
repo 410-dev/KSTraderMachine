@@ -4,9 +4,6 @@ import com.google.gson.JsonObject;
 import me.hysong.apis.kstrader.v1.objects.Account;
 import me.hysong.apis.kstrader.v1.objects.DriverExitCode;
 
-import java.util.HashMap;
-import java.util.Objects;
-
 public interface TraderDriverManifestV1 {
 
     String getDriverName();          // Driver name, ex. "UpBit Generic Driver"

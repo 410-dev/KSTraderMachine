@@ -3,7 +3,6 @@ package me.hysong.atlas.sdk.graphite.v1;
 import me.hysong.atlas.async.SimplePromise;
 import me.hysong.atlas.enums.OSKernelDistro;
 import me.hysong.atlas.interfaces.KSApplication;
-import me.hysong.atlas.interfaces.KSDeepSystemCommunicator;
 import me.hysong.atlas.sharedobj.KSEnvironment;
 import me.hysong.atlas.utils.KSHostTool;
 
